@@ -6,8 +6,8 @@ export const PORTAL_CONFIG = [
         position: { x: 5, y: 0, z: -5 },
         rotation: { x: 0, y: 0, z: 0 },
         scale: 1.0,
-        thumbnail: 'https://via.placeholder.com/300',
-        description: 'Modelo 3D de Timina'
+        description: 'Modelo 3D de Timina',
+        link: 'NBases.html' // Ejemplo de archivo local en la carpeta experiences
     },
     {
         id: 'portal-1',
@@ -16,8 +16,9 @@ export const PORTAL_CONFIG = [
         position: { x: -5, y: 0, z: -5 },
         rotation: { x: 0, y: Math.PI/4, z: 0 },
         scale: 1.0,
-        thumbnail: 'https://via.placeholder.com/300',
-        description: 'Descripción del proyecto 1'
+        description: 'Descripción del proyecto 1',
+        link: 'https://ejemplo.com/experiencia' // Ejemplo de enlace externo
     },
+    
     // Agrega más portales según sea necesario
 ];

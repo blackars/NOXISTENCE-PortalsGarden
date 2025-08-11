@@ -17,58 +17,163 @@ export class Modal {
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
             z-index: 1000;
             justify-content: center;
             align-items: center;
             opacity: 0;
-            transition: opacity 0.3s ease-in-out;
+            transition: opacity 0.5s ease-in-out;
+            overflow: hidden;
         `;
-
-        // Crear el contenido del modal
-        this.modalContent = document.createElement('div');
-        this.modalContent.className = 'modal-content';
-        this.modalContent.style.cssText = `
-            background: #1a1a1a;
-            padding: 2rem;
-            border-radius: 8px;
-            max-width: 80%;
-            max-height: 80%;
-            overflow-y: auto;
-            transform: translateY(20px);
-            transition: transform 0.3s ease-in-out;
-            color: white;
+        
+        // Crear el contenedor del círculo
+        this.circleContainer = document.createElement('div');
+        this.circleContainer.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        `;
+        
+        // Crear el círculo central
+        this.circle = document.createElement('div');
+        this.circle.className = 'modal-circle';
+        this.circle.style.cssText = `
             position: relative;
+            width: 0;
+            height: 0;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            padding: 2rem;
+            box-sizing: border-box;
+            transform: scale(1);
+            animation: pulse 3s ease-in-out infinite;
+            pointer-events: auto;
+        `;
+        
+        // Añadir keyframes directamente en el estilo
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+                100% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Contenido del modal
+        this.content = document.createElement('div');
+        this.content.className = 'modal-content';
+        this.content.style.cssText = `
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out 0.3s;
+            text-align: center;
+            max-width: 80%;
+        `;
+        
+        this.title = document.createElement('h2');
+        this.title.className = 'modal-title';
+        this.title.style.cssText = `
+            margin: 0 0 1rem 0;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        `;
+        
+        this.description = document.createElement('p');
+        this.description.className = 'modal-description';
+        this.description.style.cssText = `
+            margin: 0 0 1.5rem 0;
+            line-height: 1.5;
+        `;
+        
+        // Crear contenedor para los botones
+        this.buttonsContainer = document.createElement('div');
+        this.buttonsContainer.style.cssText = `
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
         `;
 
-        // Botón de cierre
-        this.closeButton = document.createElement('span');
-        this.closeButton.className = 'close';
-        this.closeButton.innerHTML = '&times;';
-        this.closeButton.style.cssText = `
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            font-size: 28px;
-            font-weight: bold;
+        // Botón Abrir
+        this.openButton = document.createElement('button');
+        this.openButton.className = 'modal-open';
+        this.openButton.textContent = 'Abrir';
+        this.openButton.style.cssText = `
+            background: #4CAF50;
+            border: 1px solid #45a049;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            font-size: 1rem;
             cursor: pointer;
-            color: #aaa;
+            transition: all 0.3s ease;
+            border-radius: 20px;
+            outline: none;
         `;
+        
+        this.openButton.addEventListener('mouseover', () => {
+            this.openButton.style.background = '#45a049';
+            this.openButton.style.transform = 'scale(1.05)';
+        });
+        
+        this.openButton.addEventListener('mouseout', () => {
+            this.openButton.style.background = '#4CAF50';
+            this.openButton.style.transform = 'scale(1)';
+        });
 
-        // Título del modal
-        this.titleElement = document.createElement('h2');
-        this.titleElement.className = 'modal-title';
-        this.titleElement.style.marginTop = '0';
-
-        // Cuerpo del modal
-        this.bodyElement = document.createElement('div');
-        this.bodyElement.className = 'modal-body';
-
-        // Ensamblar el modal
-        this.modalContent.appendChild(this.closeButton);
-        this.modalContent.appendChild(this.titleElement);
-        this.modalContent.appendChild(this.bodyElement);
-        this.modal.appendChild(this.modalContent);
+        // Botón Cerrar
+        this.closeButton = document.createElement('button');
+        this.closeButton.className = 'modal-close';
+        this.closeButton.textContent = 'Cerrar';
+        this.closeButton.style.cssText = `
+            background: transparent;
+            border: 1px solid white;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 20px;
+            outline: none;
+        `;
+        
+        this.closeButton.addEventListener('mouseover', () => {
+            this.closeButton.style.background = 'white';
+            this.closeButton.style.color = 'black';
+            this.closeButton.style.transform = 'scale(1.05)';
+        });
+        
+        this.closeButton.addEventListener('mouseout', () => {
+            this.closeButton.style.background = 'transparent';
+            this.closeButton.style.color = 'white';
+            this.closeButton.style.transform = 'scale(1)';
+        });
+        
+        // Añadir elementos al contenido
+        this.content.appendChild(this.title);
+        this.content.appendChild(this.description);
+        
+        // Añadir botones al contenedor
+        this.buttonsContainer.appendChild(this.openButton);
+        this.buttonsContainer.appendChild(this.closeButton);
+        this.content.appendChild(this.buttonsContainer);
+        
+        // Añadir elementos al DOM
+        this.circle.appendChild(this.content);
+        this.circleContainer.appendChild(this.circle);
+        this.modal.appendChild(this.circleContainer);
         document.body.appendChild(this.modal);
     }
 
@@ -90,59 +195,98 @@ export class Modal {
     }
 
     show(portalData) {
-        if (this.isOpen || !portalData) return;
+        if (!portalData) return;
         
         this.isOpen = true;
         this.modal.style.display = 'flex';
         
-        // Mostrar el cursor
+        // Actualizar el contenido
+        if (portalData.name) this.title.textContent = portalData.name;
+        if (portalData.description) this.description.textContent = portalData.description;
+        
+        // Configurar el botón de abrir si hay un enlace
+        if (portalData.link) {
+            this.openButton.style.display = 'inline-block';
+            this.openButton.onclick = () => {
+                // Verificar si es un enlace externo (http:// o https://)
+                if (portalData.link.startsWith('http://') || portalData.link.startsWith('https://')) {
+                    // Es un enlace externo, abrir en una nueva pestaña
+                    window.open(portalData.link, '_blank');
+                } else {
+                    // Es un archivo local, construir la ruta a la carpeta experiences
+                    const experiencePath = `../experiences/${portalData.link}`;
+                    window.open(experiencePath, '_blank');
+                }
+                this.hide();
+            };
+        } else {
+            this.openButton.style.display = 'none';
+        }
+        
+        // Forzar reflow para permitir la transición
+        void this.modal.offsetWidth;
+        
+        // Animar la aparición
+        this.modal.style.opacity = '1';
+        
+        // Animar el círculo
+        setTimeout(() => {
+            const size = Math.min(window.innerWidth, window.innerHeight) * 0.8;
+            this.circle.style.width = `${size}px`;
+            this.circle.style.height = `${size}px`;
+            
+            // Mostrar contenido después de la animación del círculo
+            setTimeout(() => {
+                this.content.style.opacity = '1';
+            }, 300);
+        }, 10);
+        
+        // Desbloquear el cursor
         document.body.style.cursor = 'auto';
         
-        // Actualizar el contenido
-        this.titleElement.textContent = portalData.name || 'Proyecto';
-        this.bodyElement.innerHTML = `
-            <div style="display: flex; flex-direction: column; gap: 1rem;">
-                <img 
-                    src="${portalData.thumbnail || 'https://via.placeholder.com/300'}" 
-                    alt="${portalData.name || 'Proyecto'}"
-                    style="max-width: 100%; border-radius: 4px;"
-                >
-                <p>${portalData.description || 'Descripción no disponible.'}</p>
-                ${portalData.additionalInfo ? `<div class="additional-info">${portalData.additionalInfo}</div>` : ''}
-            </div>
-        `;
-
-        // Animación de entrada
-        this.modal.style.opacity = '0';
-        this.modalContent.style.transform = 'translateY(20px)';
-        
-        setTimeout(() => {
-            this.modal.style.opacity = '1';
-            this.modalContent.style.transform = 'translateY(0)';
-        }, 10);
+        // Desbloquear los controles
+        if (this.controls) {
+            this.controls.unlock();
+        }
     }
 
     hide() {
-        if (!this.isOpen) return;
+        // Ocultar el contenido del modal con la misma duración que la animación del círculo
+        this.content.style.transition = 'opacity 0.3s ease-out';
+        this.content.style.opacity = '0';
         
-        // Iniciar animación de salida
-        this.modal.style.opacity = '0';
-        this.modalContent.style.transform = 'translateY(20px)';
+        // Reducir el círculo
+        this.circle.style.transition = 'width 0.4s ease-out, height 0.4s ease-out';
+        this.circle.style.width = '0';
+        this.circle.style.height = '0';
         
-        // Ocultar el cursor nuevamente
-        document.body.style.cursor = 'none';
+        // Ocultar el fondo con un ligero retraso
+        setTimeout(() => {
+            this.modal.style.transition = 'opacity 0.3s ease-out';
+            this.modal.style.opacity = '0';
+        }, 50);
         
-        // Esperar a que termine la animación antes de ocultar
+        // Esperar a que terminen las animaciones
         setTimeout(() => {
             this.modal.style.display = 'none';
-            this.isOpen = false;
             
-            // Volver a bloquear el puntero después de cerrar el modal
-            if (this.controls && !this.controls.isLocked) {
-                this.controls.lock().catch(err => {
-                    console.error('Error al bloquear el puntero:', err);
-                });
+            // Restaurar estilos de transición
+            this.content.style.transition = '';
+            this.circle.style.transition = '';
+            this.modal.style.transition = '';
+            
+            // Restaurar el cursor al cerrar
+            document.body.style.cursor = 'none';
+            
+            // Volver a bloquear los controles
+            if (this.controls) {
+                this.controls.lock();
             }
-        }, 300);
+            this.cleanup();
+        }, 400); // Reducido de 500ms a 400ms para que coincida con la animación del círculo
+    }
+
+    cleanup() {
+        // No es necesario hacer nada aquí por ahora
     }
 }

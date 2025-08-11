@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistema Solar Básico</title>
+  <style>
+    body { margin: 0; background: black; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script>
+    // Escena
+    const scene = new THREE.Scene();
+// ===== Cámara ortográfica en vista isométrica de "punta" =====
+const aspect = window.innerWidth / window.innerHeight;
+const d = 20;
+const camera = new THREE.OrthographicCamera(
+  -d * aspect, d * aspect, d, -d, 1, 1000
+);
+
+// Posición de la cámara en diagonal (verás tres caras del cubo)
+camera.position.set(10, 7, 10); 
+camera.lookAt(0, 0, 0);
+
+
+// Renderizador
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+    // Luces
+    const light = new THREE.PointLight(0xffffff, 15, 100);
+    light.position.set(0, 0, 0);
+    scene.add(light);
+    const ambient = new THREE.AmbientLight(0xffffff, 0.5); // Luz suave global
+scene.add(ambient);
+
+    // Sol
+    const solGeo = new THREE.SphereGeometry(3, 32, 32);
+    const solMat = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+    const sol = new THREE.Mesh(solGeo, solMat);
+    scene.add(sol);
+
+    // Tierra
+    const tierraGeo = new THREE.SphereGeometry(1, 32, 32);
+    const tierraMat = new THREE.MeshLambertMaterial({ color: 0x0000ff });
+    const tierra = new THREE.Mesh(tierraGeo, tierraMat);
+    scene.add(tierra);
+
+    // Luna
+    const lunaGeo = new THREE.SphereGeometry(0.3, 16, 16);
+    const lunaMat = new THREE.MeshLambertMaterial({ color: 0xaaaaaa });
+    const luna = new THREE.Mesh(lunaGeo, lunaMat);
+    scene.add(luna);
+
+    // Animación
+    let anguloTierra = 0;
+    let anguloLuna = 0;
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Orbita de la Tierra alrededor del Sol
+      anguloTierra += 0.01;
+      tierra.position.x = Math.cos(anguloTierra) * 8;
+      tierra.position.z = Math.sin(anguloTierra) * 8;
+
+      // Orbita de la Luna alrededor de la Tierra
+      anguloLuna += 0.05;
+      luna.position.x = tierra.position.x + Math.cos(anguloLuna) * 2;
+      luna.position.z = tierra.position.z + Math.sin(anguloLuna) * 2;
+
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Ajustar tamaño en ventana
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>

@@ -66,11 +66,11 @@ scene.add(directionalLight);
 
 // Controles
 const controls = new PointerLockControls(camera, renderer.domElement);
-scene.add(controls.getObject());
+scene.add(controls.object);
 
 // Posición inicial de la cámara
 camera.position.set(0, 1.6, 5);
-controls.getObject().position.y = 1.6;
+controls.object.position.y = 1.6;
 
 // Variables de movimiento
 const moveSpeed = 5;
@@ -141,9 +141,10 @@ function animate() {
     // Movimiento del jugador
     if (controls.isLocked) {
         const direction = new THREE.Vector3();
-        const frontVector = new THREE.Vector3(0, 0, -1).applyQuaternion(controls.getObject().quaternion);
-        const sideVector = new THREE.Vector3(1, 0, 0).applyQuaternion(controls.getObject().quaternion);
+        const frontVector = new THREE.Vector3(0, 0, -1).applyQuaternion(camera.quaternion);
+        const sideVector = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
         
+        // Calcular movimiento deseado
         if (keys['KeyW'] || keys['ArrowUp']) direction.add(frontVector);
         if (keys['KeyS'] || keys['ArrowDown']) direction.sub(frontVector);
         if (keys['KeyA'] || keys['ArrowLeft']) direction.sub(sideVector);
@@ -152,12 +153,97 @@ function animate() {
         direction.y = 0;
         if (direction.lengthSq() > 0) direction.normalize();
         
-        controls.moveRight(direction.x * moveSpeed * delta);
-        controls.moveForward(-direction.z * moveSpeed * delta);
+        // Calcular nueva posición
+        const currentPosition = new THREE.Vector3().copy(camera.position);
+        const moveX = direction.x * moveSpeed * delta;
+        const moveZ = -direction.z * moveSpeed * delta;
+        
+        // Límites del área (mitad del tamaño del suelo)
+        const limit = 50;
+        const newX = currentPosition.x + moveX;
+        const newZ = currentPosition.z + moveZ;
+        
+        // Aplicar movimiento solo si no se sale de los límites
+        if (Math.abs(newX) <= limit) {
+            controls.moveRight(moveX);
+        }
+        if (Math.abs(newZ) <= limit) {
+            controls.moveForward(moveZ);
+        }
     }
     
     renderer.render(scene, camera);
 }
+
+// Mostrar instrucciones si es la primera vez
+function showInstructions() {
+    if (!localStorage.getItem('hasSeenInstructions')) {
+        // Crear contenedor del modal
+        const modal = document.createElement('div');
+        modal.id = 'instructions-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        `;
+
+        // Crear iframe para cargar las instrucciones
+        const iframe = document.createElement('iframe');
+        iframe.src = 'instructions.html';
+        iframe.style.cssText = `
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+        `;
+        
+        modal.appendChild(iframe);
+        document.body.appendChild(modal);
+
+        // Función para cerrar el modal
+        const closeModal = () => {
+            document.body.removeChild(modal);
+            localStorage.setItem('hasSeenInstructions', 'true');
+            window.focus();
+            // Eliminar el event listener después de cerrar
+            window.removeEventListener('message', handleMessage);
+        };
+
+        // Manejar mensajes desde el iframe
+        const handleMessage = (event) => {
+            if (event.data === 'closeInstructions') {
+                closeModal();
+            }
+        };
+
+        // Escuchar mensajes del iframe
+        window.addEventListener('message', handleMessage, false);
+
+        // También cerrar con Escape
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+
+        // Limpiar event listener cuando se cierre el modal
+        modal._cleanup = () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }
+}
+
+// Mostrar instrucciones al cargar
+showInstructions();
 
 // Manejo de redimensionado
 window.addEventListener('resize', () => {
@@ -169,9 +255,16 @@ window.addEventListener('resize', () => {
 // Activar pointer lock con click en el canvas
 container.addEventListener('click', () => {
     if (!controls.isLocked) {
-        controls.lock().catch(err => {
-            console.error('Error al bloquear el puntero:', err);
-        });
+        try {
+            const lockPromise = controls.lock();
+            if (lockPromise && typeof lockPromise.catch === 'function') {
+                lockPromise.catch(err => {
+                    console.error('Error al bloquear el puntero:', err);
+                });
+            }
+        } catch (err) {
+            console.error('Error al intentar bloquear el puntero:', err);
+        }
     }
 });
 

@@ -122,13 +122,7 @@
             color: #fff;
         }
 
-        .action {
-            display: flex;
-            align-items: center;
-            font-size: 1em;
-            opacity: 0.9;
-            color: #fff;
-        }
+
 
         .start-button {
             background: transparent;
@@ -161,10 +155,13 @@
 
         .controls-container {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 60px;
-            margin: 40px 0;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin: 40px auto;
+            max-width: 800px;
+            width: 100%;
+            padding: 0 20px;
+            box-sizing: border-box;
         }
 
         .keys-container {
@@ -172,8 +169,34 @@
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(3, 1fr);
             gap: 8px;
-            width: 150px;
-            height: 150px;
+            width: 120px;
+            height: 120px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 160px;
+        }
+        
+        .control-group p {
+            margin: 3px 0 0 0;
+            font-size: 0.9em;
+            color: #fff;
+            text-align: center;
+        }
+        
+        .mouse-keys {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .mouse-keys p {
+            margin: 0 5px;
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .key {
@@ -211,16 +234,13 @@
             grid-row: 2;
         }
         .key-esc { 
-            grid-column: 2;
-            grid-row: 3;
             font-size: 0.9em;
-            background: rgba(100, 0, 0, 0.7);
+            margin-bottom: 20px;
         }
-
-        .action {
-            display: flex;
-            align-items: center;
-            font-size: 1.1em;
+        
+        .key-p {
+            font-size: 0.9em;
+            margin-bottom: 20px;
         }
 
         .mouse {
@@ -280,17 +300,29 @@
             <h1>In this Squared-Place...</h1>
             <p>Move your mouse to look around and click on the portals to explore.</p>
                 <div class="controls-container">
-                    <div class="keys-container">
-                        <div class="key key-w">W</div>
-                        <div class="key key-a">A</div>
-                        <div class="key key-s">S</div>
-                        <div class="key key-d">D</div>
-                        <div class="key key-esc">ESC</div>
+                    <!-- WASD Keys -->
+                    <div class="control-group">
+                        <div class="keys-container">
+                            <div class="key key-w">W</div>
+                            <div class="key key-a">A</div>
+                            <div class="key key-s">S</div>
+                            <div class="key key-d">D</div>
+                        </div>
                     </div>
                     
-                    <div class="mouse-container">
+                    <!-- Mouse -->
+                    <div class="control-group">
                         <div class="mouse"></div>
-                        <div class="mouse-label">Camera Movement</div>
+                    </div>
+                    
+                    <!-- ESC & P Keys -->
+                    <div class="control-group">
+                        <div class="mouse-keys">
+                            <div class="key key-esc">ESC</div>
+                            <p>or</p>
+                            <div class="key key-p">P</div>
+                        </div>
+                        <p>Toggle Mouse</p>
                     </div>
                 </div>
                 <p>(This Experience is not available on mobile devices)</p>

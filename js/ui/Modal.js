@@ -110,11 +110,11 @@ export class Modal {
         // Botón Abrir
         this.openButton = document.createElement('button');
         this.openButton.className = 'modal-open';
-        this.openButton.textContent = 'Abrir';
+        this.openButton.textContent = 'Open';
         this.openButton.style.cssText = `
-            background: #4CAF50;
-            border: 1px solid #45a049;
-            color: white;
+            background:rgb(255, 255, 255);
+            border: 1px solid white;
+            color: black;
             padding: 0.5rem 1.5rem;
             font-size: 1rem;
             cursor: pointer;
@@ -124,19 +124,19 @@ export class Modal {
         `;
         
         this.openButton.addEventListener('mouseover', () => {
-            this.openButton.style.background = '#45a049';
-            this.openButton.style.transform = 'scale(1.05)';
+            this.openButton.style.background = 'rgb(255, 255, 255)';
+            this.openButton.style.transform = 'scale(1.1)';
         });
         
         this.openButton.addEventListener('mouseout', () => {
-            this.openButton.style.background = '#4CAF50';
+            this.openButton.style.background = 'rgb(255, 255, 255)';
             this.openButton.style.transform = 'scale(1)';
         });
 
         // Botón Cerrar
         this.closeButton = document.createElement('button');
         this.closeButton.className = 'modal-close';
-        this.closeButton.textContent = 'Cerrar';
+        this.closeButton.textContent = 'Close';
         this.closeButton.style.cssText = `
             background: transparent;
             border: 1px solid white;

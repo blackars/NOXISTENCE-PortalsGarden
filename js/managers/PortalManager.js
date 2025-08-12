@@ -12,6 +12,8 @@ export class PortalManager {
         this.mouse = new THREE.Vector2();
         this.controls = null;
         this.camera = null;
+        this.mixers = []; // Almacenar mixers de animación
+        this.clock = new THREE.Clock(); // Reloj para las animaciones
         
         // Configurar manejador de errores
         this.loader.manager.onError = (url) => {
@@ -20,6 +22,20 @@ export class PortalManager {
         
         // Para manejar el click
         this.handleClick = this.handleClick.bind(this);
+        
+        // Iniciar el bucle de animación
+        this.animate();
+    }
+    
+    // Actualizar animaciones
+    animate() {
+        requestAnimationFrame(() => this.animate());
+        const delta = this.clock.getDelta();
+        
+        // Actualizar todos los mixers de animación
+        for (const mixer of this.mixers) {
+            mixer.update(delta);
+        }
     }
     
     setControls(controls) {
@@ -61,51 +77,85 @@ export class PortalManager {
     loadModel(config) {
         console.log(`Cargando modelo: ${config.id} desde ${config.modelPath}`);
         
-        // Cargar el modelo directamente
-        this.loader.load(
-            config.modelPath,
-            (gltf) => {
-                console.log(`✅ Modelo cargado: ${config.id}`);
-                
-                // Configurar el modelo
-                const model = gltf.scene;
-                model.position.set(
-                    config.position.x,
-                    config.position.y,
-                    config.position.z
-                );
-                
-                model.rotation.set(
-                    config.rotation?.x || 0,
-                    config.rotation?.y || 0,
-                    config.rotation?.z || 0
-                );
-                
-                const scale = config.scale || 1;
-                model.scale.set(scale, scale, scale);
-                
-                // Hacer que el modelo sea interactivo
-                model.traverse(child => {
-                    if (child.isMesh) {
-                        child.castShadow = true;
-                        child.receiveShadow = true;
-                        child.userData = { 
-                            isPortal: true,
-                            portalData: config
-                        };
+        return new Promise((resolve, reject) => {
+            this.loader.load(
+                config.modelPath,
+                (gltf) => {
+                    console.log(`✅ Modelo cargado: ${config.id}`);
+                    
+                    // Configurar el modelo
+                    const model = gltf.scene;
+                    model.position.set(
+                        config.position.x,
+                        config.position.y,
+                        config.position.z
+                    );
+                    
+                    model.rotation.set(
+                        config.rotation?.x || 0,
+                        config.rotation?.y || 0,
+                        config.rotation?.z || 0
+                    );
+                    
+                    const scale = config.scale || 1;
+                    model.scale.set(scale, scale, scale);
+                    
+                    // Configurar animaciones si existen
+                    if (gltf.animations && gltf.animations.length > 0) {
+                        console.log(`🔍 Se encontraron ${gltf.animations.length} animaciones`);
+                        
+                        // Crear un mixer para las animaciones
+                        const mixer = new THREE.AnimationMixer(model);
+                        this.mixers.push(mixer);
+                        
+                        // Reproducir todas las animaciones
+                        gltf.animations.forEach((clip) => {
+                            console.log(`▶️ Reproduciendo animación: ${clip.name}`);
+                            const action = mixer.clipAction(clip);
+                            action.play();
+                        });
+                        
+                        // Guardar referencia al mixer para actualizaciones
+                        model.userData.mixer = mixer;
+                    } else {
+                        console.log('ℹ️ No se encontraron animaciones en el modelo');
                     }
-                });
-                
-                this.scene.add(model);
-                this.portals.set(config.id, model);
-                console.log('Modelo agregado a la escena:', model);
-            },
-            undefined,
-            (error) => {
-                console.error('❌ Error al cargar el modelo:', error);
-                console.error('Ruta del error:', config.modelPath);
-            }
-        );
+                    
+                    // Hacer que el modelo sea interactivo
+                    model.traverse(child => {
+                        if (child.isMesh) {
+                            child.castShadow = true;
+                            child.receiveShadow = true;
+                            child.userData = { 
+                                isPortal: true,
+                                portalData: config
+                            };
+                        }
+                    });
+                    
+                    this.scene.add(model);
+                    this.portals.set(config.id, model);
+                    console.log('Modelo agregado a la escena:', model);
+                    
+                    // Resolver la promesa con el modelo cargado
+                    resolve(model);
+                },
+                // Progreso de carga
+                (xhr) => {
+                    console.log(`${(xhr.loaded / xhr.total * 100)}% cargado`);
+                },
+                // Manejo de errores
+                (error) => {
+                    console.error('❌ Error al cargar el modelo:', error);
+                    console.error('Ruta del error:', config.modelPath);
+                    reject(error);
+                    
+                    // Crear un marcador de respaldo si falla la carga
+                    console.log('Creando marcador de respaldo...');
+                    this.createFallbackPortal(config);
+                }
+            );
+        });
     }
 
     createFallbackPortal(config) {
@@ -185,8 +235,17 @@ export class PortalManager {
                     }
                 });
             }
+            
+            // Limpiar animaciones
+            if (portal.userData.mixer) {
+                const index = this.mixers.indexOf(portal.userData.mixer);
+                if (index > -1) {
+                    this.mixers.splice(index, 1);
+                }
+            }
         });
         
         this.portals.clear();
+        this.mixers = [];
     }
 }

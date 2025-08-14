@@ -2,27 +2,166 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Sistema Solar 3D</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Maxkodia Planet</title>
   <style>
+    /* Overlay de transición */
+    .fade-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      z-index: 1000;
+      opacity: 1;
+      transition: opacity 1s ease-out;
+      pointer-events: none;
+    }
+    
+    .fade-overlay.hidden {
+      opacity: 0;
+    }
+    
+    
+    @font-face {
+      font-family: 'Gobold';
+      src: url('../public/Gobold.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
     body { 
       margin: 0; 
       background: black; 
       overflow: hidden;
+      font-family: 'Gobold', sans-serif;
     }
     canvas { 
       display: block; 
       width: 100%;
       height: 100%;
     }
+    .title {
+      position: absolute;
+      top: 40px;
+      left: 40px;
+      color: white;
+      font-size: 3em;
+      text-shadow: 2px 2px 4px rgba(210, 210, 210, 0.5);
+      z-index: 100;
+      pointer-events: none;
+    }
+
     .controls {
       position: absolute;
-      bottom: 20px;
-      left: 20px;
-      color: white;
-      background: rgba(0,0,0,0.5);
+      bottom: 40px;
+      left: 40px;
+      color: rgb(255, 255, 255);
+      background: transparent;
       padding: 10px;
-      border-radius: 5px;
-      font-family: Arial, sans-serif;
+      font-family: 'Gobold', sans-serif;
+      font-size: 0.9em;
+      letter-spacing: 1px;
+    }
+    
+    .planet-info {
+      position: absolute;   
+      top: 100px;
+      left: 40px;
+      width: 80%;
+      max-width: 300px;
+      background: transparent;
+      color: white;
+      padding: 20px 0 0 0;
+      font-family: 'Gobold', sans-serif;
+      line-height: 1.5;
+      display: none;
+      backdrop-filter: blur(1px);
+      font-size: 14px;
+    }
+    
+    .planet-info.visible {
+      display: block;
+    }
+    
+    .landing-button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 8px 20px;
+      background: transparent;
+      color: white;
+      border: 1px solid white;
+      text-decoration: none;
+      font-family: 'Gobold', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-radius: 0;
+    }
+    
+    .landing-button:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.2);
+    }
+    
+    @media (max-width: 768px) {
+      .planet-info {
+        width: 80%;
+        left: 10%;
+        top: 80px;
+        font-size: 12px;
+        line-height: 1.3;
+      }
+    }
+    
+    /* Estilos personalizados para el slider */
+    input[type="range"] {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      width: 150px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.2);
+      outline: none;
+      margin: 10px 0;
+    }
+    
+    /* Estilo para el thumb (el control deslizante) */
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      background: #474747;
+      cursor: pointer;
+      border: none;
+      border-radius: 0;
+      transition: all 0.1s ease;
+    }
+    
+    input[type="range"]::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      background: #7b7b7b;
+      cursor: pointer;
+      border: none;
+      border-radius: 0;
+      transition: all 0.1s ease;
+    }
+    
+    /* Efecto hover */
+    input[type="range"]:hover::-webkit-slider-thumb {
+      transform: scale(1.3);
+      background: #ffffff;
+    }
+    
+    input[type="range"]:hover::-moz-range-thumb {
+      transform: scale(1.3);
+      background: #474747;
     }
   </style>
 </head>
@@ -30,37 +169,134 @@
   <!-- Usando una versión estable y probada de Three.js -->
   <script src="https://unpkg.com/three@0.132.2/build/three.min.js"></script>
   <script src="https://unpkg.com/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
+  <div id="fadeOverlay" class="fade-overlay"></div>
+  <div class="title">Maxkodia Planet</div>
+  <div id="planetInfo" class="planet-info">
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <a href="#" id="landingButton" class="landing-button">Landing</a>
+  </div>
   <div class="controls">
-    <div>Maxkodia Planet</div>
     <div>
-      Timepass:
-      <input type="range" id="animationSpeed" min="0" max="2" step="0.1" value="1">
+      Timepass
+      <input class="border-none" type="range" id="animationSpeed" min="0.1" max="2" step="0.1" value="1">
     </div>
   </div>
   
   <script>
+    // Ocultar overlay después de que cargue la página
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const overlay = document.getElementById('fadeOverlay');
+        if (overlay) {
+          overlay.classList.add('hidden');
+          // Eliminar el overlay del DOM después de la transición
+          overlay.addEventListener('transitionend', () => {
+            overlay.remove();
+          }, { once: true });
+        }
+      }, 1000); // Pequeño retraso para asegurar que todo esté listo
+    });
+    
     // Variables de control
     let modelScale = 1.0;
-    let solarSystem = null;
+    let solarSystem = null; 
     let mixer = null;
     let clock = new THREE.Clock();
     let animationSpeed = 1.0;
+    let isRotationPaused = false;
+    let isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    let lastTap = 0;
+    let tapTimeout;
+    const DOUBLE_TAP_DELAY = 300; // ms
+    
+    // Variables para el efecto parallax
+    let mouseX = 0;
+    let mouseY = 0;
+    let targetRotationX = 0;
+    let targetRotationY = 0;
+    const rotationIntensity = 0.2; // Intensidad del efecto de inclinación
+    const rotationDamping = 0.05; // Suavizado del movimiento
     
     // Variables para el zoom
-    let targetZoom = 1.0;
+    let targetZoom = 2.0;
     const minZoom = 0.1;
-    const maxZoom = 7.0;
+    const maxZoom = 25;
     const zoomSpeed = 0.5;
     
     // Escena
     const scene = new THREE.Scene();
     
+    // Crear fondo estrellado
+    function createSkybox() {
+      // Crear geometría para las estrellas
+      const starsGeometry = new THREE.BufferGeometry();
+      const starCount = 5000;
+      
+      // Crear posiciones aleatorias para las estrellas
+      const positions = new Float32Array(starCount * 3);
+      const sizes = new Float32Array(starCount);
+      const colors = new Float32Array(starCount * 3);
+      
+      // Colores para las estrellas (azules, blancas y moradas)
+      const starColors = [
+        0xffffff, // blanco
+        0x7fb3ff, // azul claro
+        0x9d7bff, // morado claro
+        0x5d8aff, // azul
+        0xc17fff  // morado
+      ];
+      
+      for (let i = 0; i < starCount; i++) {
+        // Posición aleatoria en una esfera
+        const i3 = i * 3;
+        const radius = 2000 + Math.random() * 200; // Radio entre 1000 y 1200
+        const theta = Math.random() * Math.PI * 2; // Ángulo en el plano XZ
+        const phi = Math.acos(2 * Math.random() - 1); // Ángulo desde el polo
+        
+        positions[i3] = radius * Math.sin(phi) * Math.cos(theta);
+        positions[i3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+        positions[i3 + 2] = radius * Math.cos(phi);
+        
+        // Tamaño aleatorio
+        sizes[i] = Math.random() * 2 + 0.5;
+        
+        // Color aleatorio de la paleta
+        const color = new THREE.Color(starColors[Math.floor(Math.random() * starColors.length)]);
+        colors[i3] = color.r;
+        colors[i3 + 1] = color.g;
+        colors[i3 + 2] = color.b;
+      }
+      
+      starsGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      starsGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+      starsGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      
+      // Material para las estrellas
+      const starsMaterial = new THREE.PointsMaterial({
+        size: 1,
+        sizeAttenuation: true,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending
+      });
+      
+      // Crear el sistema de partículas
+      const starField = new THREE.Points(starsGeometry, starsMaterial);
+      scene.add(starField);
+    }
+    
+    // Llamar a la función para crear el skybox
+    createSkybox();
+    
     // Cámara
     const aspect = window.innerWidth / window.innerHeight;
-    const camera = new THREE.PerspectiveCamera(60, aspect, 0.01, 1000);
-    camera.position.set(5, 3, 5); 
+    const camera = new THREE.PerspectiveCamera(60, aspect, 0.1, 1000);
+    // Posición inicial centrada en Z para evitar inclinaciones
+    camera.position.set(0, 0, 150); 
     camera.lookAt(0, 0, 0);
-
+    
     // Renderizador
     const renderer = new THREE.WebGLRenderer({ 
       antialias: true,
@@ -132,6 +368,20 @@
       function (gltf) {
         console.log('Modelo cargado correctamente');
         solarSystem = gltf.scene;
+        
+        // Eliminar cualquier helper, guía o luz del modelo
+        solarSystem.traverse((child) => {
+          // Ocultar ayudas visuales
+          if (child.isLine || child.isLineSegments || child.isGridHelper || child.isAxesHelper) {
+            child.visible = false;
+          }
+          // Deshabilitar luces
+          if (child.isLight) {
+            child.visible = false;
+            console.log('Luz deshabilitada:', child.type, child.name);
+          }
+        });
+        
         scene.add(solarSystem);
         
         // Inicializar animaciones si existen
@@ -146,13 +396,14 @@
           });
           
           // Configurar control de velocidad
-          document.getElementById('animationSpeed').addEventListener('input', (e) => {
-            animationSpeed = parseFloat(e.target.value);
-            document.getElementById('speedValue').textContent = `${animationSpeed.toFixed(1)}x`;
-          });
+          const speedControl = document.getElementById('animationSpeed');
+          if (speedControl) {
+            speedControl.addEventListener('input', (e) => {
+              animationSpeed = parseFloat(e.target.value);
+            });
+          }
         } else {
           console.log('No se encontraron animaciones en el modelo');
-          document.querySelector('.controls div:last-child').style.display = 'none';
         }
         
         // Calcular el tamaño del modelo
@@ -166,15 +417,17 @@
         solarSystem.position.set(-center.x, -center.y, -center.z);
         updateModelScale();
         
-        // Ajustar la cámara
+        // Ajustar la cámara para centrar el modelo
         const maxDim = Math.max(size.x, size.y, size.z);
-        const distance = maxDim * 1.5;
-        camera.position.set(distance, distance * 0.7, distance);
+        const distance = maxDim * 10;  // Distancia adecuada para ver el planeta
+        
+        // Posicionar la cámara directamente en el eje Z
+        camera.position.set(0, 0, distance);
         camera.lookAt(0, 0, 0);
         
-        // Ajustar planos de recorte basados en el tamaño del modelo
-        camera.near = distance * 0.01;
-        camera.far = distance * 10;
+        // Ajustar planos de recorte
+        camera.near = 0.1;  // Cercano fijo
+        camera.far = distance * 5;  // Suficientemente lejos
         camera.updateProjectionMatrix();
         
         console.log('Cámara posicionada en:', camera.position);
@@ -190,14 +443,12 @@
     function onMouseWheel(event) {
       event.preventDefault();
       
-      // Control de zoom con Ctrl + Rueda
+      // Zoom con Ctrl + rueda (movimiento físico de la cámara)
       if (event.ctrlKey) {
-        modelScale += event.deltaY * -0.001;
-        modelScale = Math.max(0.1, Math.min(5, modelScale));
-        document.getElementById('scaleValue').textContent = modelScale.toFixed(2);
-        if (solarSystem) updateModelScale();
+        const zoomFactor = event.deltaY > 0 ? 0.9 : 1.1;
+        camera.position.multiplyScalar(zoomFactor);
       } 
-      // Zoom normal con rueda
+      // Zoom normal con rueda (zoom óptico)
       else {
         targetZoom += event.deltaY * -0.001;
         targetZoom = Math.max(minZoom, Math.min(maxZoom, targetZoom));
@@ -210,21 +461,118 @@
     
     window.addEventListener('wheel', onMouseWheel, { passive: false });
 
+    // Manejar entrada del teclado
+    function onKeyDown(event) {
+      // Espacio para pausar/reanudar rotación
+      if (event.code === 'Space') {
+        event.preventDefault();
+        isRotationPaused = !isRotationPaused;
+        
+      }
+    }
+
+    // Manejar clic/touch en el modelo 3D
+    function handleModelClick(event, isDouble = false) {
+      // Verificar si se hizo clic en el modelo
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+      
+      // Obtener la posición normalizada del clic (-1 a 1)
+      const clientX = event.clientX || (event.touches && event.touches[0].clientX);
+      const clientY = event.clientY || (event.touches && event.touches[0].clientY);
+      
+      if (clientX === undefined || clientY === undefined) return;
+      
+      mouse.x = (clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(clientY / window.innerHeight) * 2 + 1;
+      
+      // Configurar el rayo desde la cámara
+      raycaster.setFromCamera(mouse, camera);
+      
+      // Verificar intersección con el modelo
+      if (!solarSystem) return;
+      
+      const intersects = raycaster.intersectObject(solarSystem, true);
+      if (intersects.length === 0) return;
+      
+      event.preventDefault();
+      
+      if (isDouble) {
+        // Pausar/reanudar con doble clic
+        isRotationPaused = !isRotationPaused;
+      } else {
+        // Mostrar/ocultar panel de información con clic simple
+        const infoPanel = document.getElementById('planetInfo');
+        infoPanel.classList.toggle('visible');
+      }
+    }
+    
+    // Manejar movimiento del ratón para el efecto parallax
+    function onMouseMove(event) {
+      if (isRotationPaused) {
+        // Calcular la posición normalizada del ratón (-1 a 1) con suavizado
+        const targetX = (event.clientX / window.innerWidth) * 2 - 1;
+        const targetY = (event.clientY / window.innerHeight) * 2 - 1;
+        
+        // Suavizar el seguimiento del ratón
+        mouseX += (targetX - mouseX) * 0.1;
+        mouseY += (targetY - mouseY) * 0.1;
+      }
+    }
+    
+    // Manejar toque para dispositivos táctiles
+    function onTouchMove(event) {
+      if (isRotationPaused && event.touches.length > 0) {
+        event.preventDefault();
+        const touch = event.touches[0];
+        mouseX = (touch.clientX / window.innerWidth) * 2 - 1;
+        mouseY = (touch.clientY / window.innerHeight) * 2 - 1;
+      }
+    }
+    
+    // Resetear la rotación cuando se suelta el ratón o el toque
+    function onPointerUp() {
+      if (isRotationPaused) {
+        mouseX = 0;
+        mouseY = 0;
+      }
+    }
+    
     // Animación
     function animate() {
       requestAnimationFrame(animate);
       
-      // Actualizar animaciones si existen
+      // Obtener el tiempo real desde el último frame
+      const now = performance.now();
+      
+      // Si la animación está pausada, no actualizamos el mixer
       if (mixer) {
-        const delta = clock.getDelta();
-        mixer.timeScale = animationSpeed;
-        mixer.update(delta);
+        if (!isRotationPaused) {
+          // Calcular el delta time real, teniendo en cuenta el tiempo de pausa
+          const delta = clock.getDelta();
+          mixer.timeScale = animationSpeed;
+          
+          // Actualizar la animación con el delta time real
+          mixer.update(delta);
+        }
       }
       
       // Aplicar zoom suavizado
       camera.zoom += (targetZoom - camera.zoom) * 0.1;
-      camera.updateProjectionMatrix();
       
+      // Aplicar efecto de inclinación (parallax) si la rotación está pausada
+      if (isRotationPaused && solarSystem) {
+        // Calcular rotación objetivo basada en la posición del ratón
+        // Invertir el eje Y para una sensación más natural
+        targetRotationX = -mouseY * rotationIntensity * 0.5;  // Reducir intensidad
+        targetRotationY = mouseX * rotationIntensity * 0.5;   // Reducir intensidad
+        
+        // Aplicar rotación suavizada con límites
+        solarSystem.rotation.x = targetRotationX;
+        solarSystem.rotation.y = targetRotationY;
+      }
+      
+      camera.updateProjectionMatrix();
       renderer.render(scene, camera);
     }
     animate();
@@ -236,6 +584,53 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
     }
     window.addEventListener('resize', onWindowResize);
+    
+    // Función para manejar toques táctiles
+    function handleTouchEnd(e) {
+      const currentTime = new Date().getTime();
+      const tapLength = currentTime - lastTap;
+      
+      clearTimeout(tapTimeout);
+      
+      if (tapLength < DOUBLE_TAP_DELAY && tapLength > 0) {
+        // Es un doble toque - pausar/reanudar
+        handleModelClick(e, true);
+      } else {
+        // Es un toque simple - mostrar/ocultar info
+        tapTimeout = setTimeout(() => {
+          handleModelClick(e, false);
+        }, DOUBLE_TAP_DELAY);
+      }
+      
+      lastTap = currentTime;
+      onPointerUp(e);
+    }
+    
+    // Añadir event listeners para las interacciones
+    window.addEventListener('click', (e) => handleModelClick(e, false));
+    window.addEventListener('dblclick', (e) => handleModelClick(e, true));
+    
+    // Eventos táctiles
+    window.addEventListener('touchend', handleTouchEnd, { passive: false });
+    
+    // Control de teclado para pausar/reanudar
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+        isRotationPaused = !isRotationPaused;
+      }
+    });
+    
+    // Deshabilitar gestos de zoom en móvil
+    document.addEventListener('gesturestart', (e) => {
+      e.preventDefault();
+    });
+    
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('touchmove', onTouchMove, { passive: false });
+    window.addEventListener('mouseup', onPointerUp);
+    
+
   </script>
 </body>
 </html>

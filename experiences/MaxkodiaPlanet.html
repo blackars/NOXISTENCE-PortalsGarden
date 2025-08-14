@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistema Solar 3D</title>
+  <style>
+    body { 
+      margin: 0; 
+      background: black; 
+      overflow: hidden;
+    }
+    canvas { 
+      display: block; 
+      width: 100%;
+      height: 100%;
+    }
+    .controls {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      color: white;
+      background: rgba(0,0,0,0.5);
+      padding: 10px;
+      border-radius: 5px;
+      font-family: Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <!-- Usando una versión estable y probada de Three.js -->
+  <script src="https://unpkg.com/three@0.132.2/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
+  <div class="controls">
+    <div>Maxkodia Planet</div>
+    <div>
+      Timepass:
+      <input type="range" id="animationSpeed" min="0" max="2" step="0.1" value="1">
+    </div>
+  </div>
+  
+  <script>
+    // Variables de control
+    let modelScale = 1.0;
+    let solarSystem = null;
+    let mixer = null;
+    let clock = new THREE.Clock();
+    let animationSpeed = 1.0;
+    
+    // Variables para el zoom
+    let targetZoom = 1.0;
+    const minZoom = 0.1;
+    const maxZoom = 7.0;
+    const zoomSpeed = 0.5;
+    
+    // Escena
+    const scene = new THREE.Scene();
+    
+    // Cámara
+    const aspect = window.innerWidth / window.innerHeight;
+    const camera = new THREE.PerspectiveCamera(60, aspect, 0.01, 1000);
+    camera.position.set(5, 3, 5); 
+    camera.lookAt(0, 0, 0);
+
+    // Renderizador
+    const renderer = new THREE.WebGLRenderer({ 
+      antialias: true,
+      powerPreference: 'high-performance',
+      stencil: false,
+      depth: true,
+      alpha: false,
+      logarithmicDepthBuffer: true,
+      precision: 'highp'
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Limitar el pixel ratio
+    document.body.appendChild(renderer.domElement);
+
+    // Luces
+    // Luz ambiental suave
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.8);
+    scene.add(ambientLight);
+    
+    // Luz direccional principal (como el sol)
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(10, 20, 10);
+    directionalLight.castShadow = true;
+    
+    // Configuración de sombras
+    directionalLight.shadow.mapSize.width = 1024;
+    directionalLight.shadow.mapSize.height = 1024;
+    directionalLight.shadow.camera.near = 0.5;
+    directionalLight.shadow.camera.far = 500;
+    
+    // Añadir ayudas de luz (opcional, para depuración)
+    const directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 5);
+    scene.add(directionalLightHelper);
+    
+    scene.add(directionalLight);
+    
+    // Luz puntual adicional para resaltar detalles
+    const pointLight = new THREE.PointLight(0xffffff, 1, 100);
+    pointLight.position.set(5, 10, -5);
+    scene.add(pointLight);
+    
+    // Luz hemisférica para iluminación ambiental
+    const hemisphereLight = new THREE.HemisphereLight(0xffffbb, 0x080820, 0.6);
+    scene.add(hemisphereLight);
+
+    // Configurar el gestor de carga
+    const loadingManager = new THREE.LoadingManager();
+    
+    loadingManager.onProgress = function (url, itemsLoaded, itemsTotal) {
+      console.log('Cargando archivo: ' + url + '\nCargados ' + itemsLoaded + ' de ' + itemsTotal + ' archivos');
+      document.getElementById('loading').textContent = `Cargando modelo... ${Math.round(itemsLoaded/itemsTotal * 100)}%`;
+    };
+    
+    loadingManager.onLoad = function () {
+      console.log('Carga completada');
+      document.getElementById('loading').style.display = 'none';
+    };
+    
+    // Cargar modelo GLB
+    const loader = new THREE.GLTFLoader();
+    const modelPath = '../assets/models/MaxkodiaPlanet.glb';
+    
+    console.log('Cargando modelo desde:', modelPath);
+    
+    loader.load(
+      modelPath,
+      function (gltf) {
+        console.log('Modelo cargado correctamente');
+        solarSystem = gltf.scene;
+        scene.add(solarSystem);
+        
+        // Inicializar animaciones si existen
+        if (gltf.animations && gltf.animations.length > 0) {
+          console.log('Animaciones encontradas:', gltf.animations.length);
+          mixer = new THREE.AnimationMixer(solarSystem);
+          
+          // Reproducir todas las animaciones
+          gltf.animations.forEach((clip) => {
+            const action = mixer.clipAction(clip);
+            action.play();
+          });
+          
+          // Configurar control de velocidad
+          document.getElementById('animationSpeed').addEventListener('input', (e) => {
+            animationSpeed = parseFloat(e.target.value);
+            document.getElementById('speedValue').textContent = `${animationSpeed.toFixed(1)}x`;
+          });
+        } else {
+          console.log('No se encontraron animaciones en el modelo');
+          document.querySelector('.controls div:last-child').style.display = 'none';
+        }
+        
+        // Calcular el tamaño del modelo
+        const box = new THREE.Box3().setFromObject(solarSystem);
+        const size = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+        
+        console.log('Tamaño del modelo:', size);
+        
+        // Centrar el modelo
+        solarSystem.position.set(-center.x, -center.y, -center.z);
+        updateModelScale();
+        
+        // Ajustar la cámara
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const distance = maxDim * 1.5;
+        camera.position.set(distance, distance * 0.7, distance);
+        camera.lookAt(0, 0, 0);
+        
+        // Ajustar planos de recorte basados en el tamaño del modelo
+        camera.near = distance * 0.01;
+        camera.far = distance * 10;
+        camera.updateProjectionMatrix();
+        
+        console.log('Cámara posicionada en:', camera.position);
+      },
+      undefined,
+      function (error) {
+        console.error('Error al cargar el modelo:', error);
+      }
+    );
+
+    // Control de zoom y rotación
+    
+    function onMouseWheel(event) {
+      event.preventDefault();
+      
+      // Control de zoom con Ctrl + Rueda
+      if (event.ctrlKey) {
+        modelScale += event.deltaY * -0.001;
+        modelScale = Math.max(0.1, Math.min(5, modelScale));
+        document.getElementById('scaleValue').textContent = modelScale.toFixed(2);
+        if (solarSystem) updateModelScale();
+      } 
+      // Zoom normal con rueda
+      else {
+        targetZoom += event.deltaY * -0.001;
+        targetZoom = Math.max(minZoom, Math.min(maxZoom, targetZoom));
+      }
+    }
+    
+    function updateModelScale() {
+      solarSystem.scale.set(modelScale, modelScale, modelScale);
+    }
+    
+    window.addEventListener('wheel', onMouseWheel, { passive: false });
+
+    // Animación
+    function animate() {
+      requestAnimationFrame(animate);
+      
+      // Actualizar animaciones si existen
+      if (mixer) {
+        const delta = clock.getDelta();
+        mixer.timeScale = animationSpeed;
+        mixer.update(delta);
+      }
+      
+      // Aplicar zoom suavizado
+      camera.zoom += (targetZoom - camera.zoom) * 0.1;
+      camera.updateProjectionMatrix();
+      
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Ajustar tamaño en ventana
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+    window.addEventListener('resize', onWindowResize);
+  </script>
+</body>
+</html>

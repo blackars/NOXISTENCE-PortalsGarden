@@ -32,8 +32,13 @@
 <!-- Interfaz de usuario -->
 <div class="title">Portals Garden</div>
 
+<script type="module">
+  // Importar Three.js como módulo
+  import * as THREE from 'three';
+  
+  // Aquí puedes acceder a THREE para usarlo en la consola
+  window.THREE = THREE;
 
-<script>
   // Ocultar overlay después de que cargue la página
   window.addEventListener('load', () => {
     setTimeout(() => {
@@ -48,6 +53,8 @@
     }, 1300); // Retraso de 1.3 segundos
   });
 </script>
-<script type="module" src="main.js"></script>
+
+<!-- Importar tu archivo JavaScript principal -->
+<script type="module" src="./main.js"></script>
 </body>
 </html>

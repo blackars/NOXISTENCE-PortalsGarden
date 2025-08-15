@@ -1,6 +1,9 @@
+// Importaciones de Three.js
 import * as THREE from 'three';
-import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+// Importaciones locales
 import { PortalManager } from './js/managers/PortalManager.js';
 import { Modal } from './js/ui/Modal.js';
 import { PORTAL_CONFIG } from './js/config/portals.js';
@@ -12,7 +15,7 @@ const gridPulseSpeed = 0.5; // Velocidad de la animación del grid
 // Configuración básica de Three.js
 const container = document.getElementById('container');
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xffffff); // Fondo blanco
+scene.background = new THREE.Color(0xffffff); // Fondo blanco   
 
 // Configuración de cámara
 const camera = new THREE.PerspectiveCamera(
@@ -22,12 +25,21 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 camera.name = 'camera';
+camera.position.set(0, 1.6, 5);
 
 // Configuración del renderizador
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 container.appendChild(renderer.domElement);
+
+// Asegurarse de que el contenedor exista
+if (!container) {
+    console.error('No se encontró el elemento con id "container"');
+}
+
+// Controles - Inicializar después del renderer
+const controls = new PointerLockControls(camera, renderer.domElement);
 
 // Suelo (invisible, solo para sombras)
 const floorGeometry = new THREE.PlaneGeometry(100, 100);
@@ -63,14 +75,6 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
 directionalLight.position.set(1, 1, 1);
 directionalLight.castShadow = true;
 scene.add(directionalLight);
-
-// Controles
-const controls = new PointerLockControls(camera, renderer.domElement);
-scene.add(controls.object);
-
-// Posición inicial de la cámara
-camera.position.set(0, 1.6, 5);
-controls.object.position.y = 1.6;
 
 // Variables de movimiento
 const moveSpeed = 5;

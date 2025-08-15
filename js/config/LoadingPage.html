@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargando...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+        
+        .loading-container {
+            text-align: center;
+        }
+
+        .shapes-container {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 30px;
+            animation: allTogether 9s ease-in-out infinite;
+        }
+        
+        .shape {
+            width: 40px;
+            height: 40px;
+            background-color: #000000;
+            opacity: 0.3;
+            animation: pulse 3s ease-in-out infinite;
+        }
+        
+        .circle {
+            border-radius: 50%;
+            animation-delay: 0s;
+        }
+        
+        .square {
+            animation-delay: 0.5s;
+        }
+        
+        .triangle {
+            width: 0;
+            height: 0;
+            background-color: transparent !important;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 40px solid #000000;
+            animation-delay: 1s;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            25% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes allTogether {
+            0%, 66% {
+                /* Normal individual pulsing - handled by the pulse animation */
+            }
+            77%, 88% {
+                /* All shapes visible together */
+            }
+        }
+
+        /* Separate rule for the shape states during the all-together phase */
+        .shapes-container.animate-together .shape {
+            opacity: 1;
+            transform: scale(1.1);
+            animation: none !important;
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="loading-container">
+        <div class="shapes-container" id="shapesContainer">
+            <div class="shape circle"></div>
+            <div class="shape square"></div>
+            <div class="shape triangle"></div>
+        </div>
+    </div>
+    <script>
+        // Add/remove class for the all-together animation
+        const container = document.getElementById('shapesContainer');
+        setInterval(() => {
+            container.classList.add('animate-together');
+            setTimeout(() => {
+                container.classList.remove('animate-together');
+            }, 1100); // Slightly longer than the 77%-88% window
+        }, 9000); // Every 9 seconds
+    </script>
+</body>
+</html>

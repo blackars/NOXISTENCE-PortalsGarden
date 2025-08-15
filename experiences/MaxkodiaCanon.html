@@ -37,6 +37,33 @@
     // Variables globales
     let scene, camera, renderer, controls, terrain, player;
     let clock = new THREE.Clock();
+    let raycaster = new THREE.Raycaster();
+    let collisionObjects = [];
+    let terrainBounds = {
+      minX: -100,
+      maxX: 100,
+      minZ: -100,
+      maxZ: 100
+    };
+    
+    // Configuración del jugador
+    const playerConfig = {
+      radius: 1.0,    // Radio más pequeño para mejor precisión
+      height: 2,
+      speed: 10,      // Velocidad moderada
+      jumpForce: 15,  // Fuerza de salto moderada
+      gravity: -30,   // Gravedad estándar
+      slopeLimit: 0.5, // Límite de pendiente más estricto
+      stepHeight: 0.3, // Altura de escalón reducida
+      skinWidth: 0.1   // Margen para evitar pegado
+    };
+    
+    // Estado del jugador
+    const playerState = {
+      velocity: new THREE.Vector3(),
+      direction: new THREE.Vector3(),
+      canJump: false
+    };
     
     init();
     animate();
@@ -109,21 +136,42 @@
         '../assets/models/max_crater.glb',
         function(gltf) {
           terrain = gltf.scene;
+          // Configurar el terreno para colisiones
           terrain.traverse(function(node) {
             if (node.isMesh) {
               node.castShadow = true;
               node.receiveShadow = true;
+              
+              // Habilitar colisiones
+              if (node.geometry) {
+                node.updateMatrixWorld();
+                // Asegurar que la malla sea colisionable
+                if (!node.geometry.boundingBox) {
+                  node.geometry.computeBoundingBox();
+                }
+                collisionObjects.push(node);
+              }
             }
           });
           scene.add(terrain);
           
-          // Ajustar la cámara al tamaño del terreno
-          const box = new THREE.Box3().setFromObject(terrain);
-          const center = box.getCenter(new THREE.Vector3());
-          const size = box.getSize(new THREE.Vector3());
+          // Obtener la posición y dimensiones del terreno
+          const terrainBox = new THREE.Box3().setFromObject(terrain);
+          const terrainCenter = new THREE.Vector3();
+          terrainBox.getCenter(terrainCenter);
+          const terrainSize = terrainBox.getSize(new THREE.Vector3());
           
-          // Crear jugador (esfera)
-          createPlayer(center);
+          // Establecer los límites del terreno
+          terrainBounds = {
+            minX: terrainBox.min.x,
+            maxX: terrainBox.max.x,
+            minZ: terrainBox.min.z,
+            maxZ: terrainBox.max.z
+          };
+          
+          // Crear jugador (esfera) en el centro del terreno
+          createPlayer(terrainCenter);
+          
         },
         undefined,
         function(error) {
@@ -136,21 +184,57 @@
     }
     
     function createPlayer(position) {
-      const geometry = new THREE.SphereGeometry(1, 32, 32);
-      const material = new THREE.MeshPhongMaterial({ 
-        color: 0x00ff00,
-        shininess: 100
+      // Crear la esfera del jugador
+      const geometry = new THREE.SphereGeometry(playerConfig.radius, 16, 16);
+      const material = new THREE.MeshBasicMaterial({ 
+        color: 0xff0000,  // Rojo para mejor visibilidad
       });
       
       player = new THREE.Mesh(geometry, material);
-      player.position.copy(position);
-      player.position.y += 10; // Posicionar por encima del terreno
       player.castShadow = true;
+      player.receiveShadow = true;
+      
+      // Posición inicial
+      player.position.copy(position);
+      player.position.y = 50; // Posición inicial alta para caer sobre el terreno
+      
+      // Añadir borde para mejor visibilidad
+      const edges = new THREE.EdgesGeometry(geometry);
+      const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000, linewidth: 1 });
+      const wireframe = new THREE.LineSegments(edges, lineMaterial);
+      player.add(wireframe);
+      
+      // Añadir luz a la esfera para mejor visibilidad
+      const light = new THREE.PointLight(0xffffff, 1, 10);
+      player.add(light);
+      
+      // Configurar raycaster para detección de colisiones
+      raycaster = new THREE.Raycaster(
+        new THREE.Vector3(),
+        new THREE.Vector3(0, -1, 0),
+        0,
+        playerConfig.radius * 3
+      );
+      
+      // Inicializar estado del jugador
+      playerState.velocity.set(0, 0, 0);
+      playerState.direction.set(0, 0, 0);
+      playerState.canJump = false;
+      
+      // Agregar el jugador a la escena
       scene.add(player);
       
-      // Hacer que la cámara siga al jugador
-      controls.target.copy(player.position);
-      camera.lookAt(player.position);
+
+      
+      // Configurar la cámara para vista fija
+      camera.position.set(0, 50, 50);
+      camera.lookAt(0, 0, 0);
+      
+      // Configurar controles de cámara fijos
+      if (controls) {
+        controls.target.set(0, 0, 0);
+        controls.update();
+      }
     }
     
     function onWindowResize() {
@@ -159,15 +243,220 @@
       renderer.setSize(window.innerWidth, window.innerHeight);
     }
     
+    function checkGroundCollision() {
+      // Configurar rayo desde el centro de la esfera hacia abajo
+      raycaster.ray.origin.copy(player.position);
+      raycaster.ray.direction.set(0, -1, 0);
+      raycaster.far = playerConfig.radius * 2;
+      
+      const intersects = raycaster.intersectObjects(collisionObjects, true);
+      
+      if (intersects.length > 0) {
+        const hitPoint = intersects[0].point;
+        const distance = player.position.y - hitPoint.y;
+        
+        // Si estamos cerca del suelo
+        if (distance <= playerConfig.radius * 1.1) {
+          // Ajustar posición para que la esfera esté justo encima de la superficie
+          player.position.y = hitPoint.y + playerConfig.radius * 1.01; // Pequeño margen
+          playerState.velocity.y = 0;
+          playerState.canJump = true;
+          return true;
+        }
+      }
+      
+      playerState.canJump = false;
+      return false;
+    }
+    
+    function keepPlayerInBounds() {
+      // Ajustar los límites considerando el radio de la esfera
+      const adjustedMinX = terrainBounds.minX + playerConfig.radius;
+      const adjustedMaxX = terrainBounds.maxX - playerConfig.radius;
+      const adjustedMinZ = terrainBounds.minZ + playerConfig.radius;
+      const adjustedMaxZ = terrainBounds.maxZ - playerConfig.radius;
+      
+      // Mantener al jugador dentro de los límites ajustados del terreno
+      player.position.x = Math.max(adjustedMinX, Math.min(adjustedMaxX, player.position.x));
+      player.position.z = Math.max(adjustedMinZ, Math.min(adjustedMaxZ, player.position.z));
+      
+      // Verificar si el jugador está sobre el terreno
+      raycaster.ray.origin.copy(player.position);
+      raycaster.ray.origin.y += 10; // Empezar el rayo desde arriba
+      raycaster.ray.direction.set(0, -1, 0);
+      raycaster.far = 20; // Rango de detección amplio
+      
+      const intersects = raycaster.intersectObjects(collisionObjects, true);
+      
+      // Si no hay intersección con el terreno, el jugador está en un borde
+      if (intersects.length === 0) {
+        // Empujar al jugador hacia el centro del terreno
+        const centerX = (terrainBounds.minX + terrainBounds.maxX) / 2;
+        const centerZ = (terrainBounds.minZ + terrainBounds.maxZ) / 2;
+        const direction = new THREE.Vector3(
+          centerX - player.position.x,
+          0,
+          centerZ - player.position.z
+        ).normalize();
+        
+        // Aplicar una fuerza de empuje hacia adentro
+        player.position.x += direction.x * 0.5;
+        player.position.z += direction.z * 0.5;
+      }
+      
+      // Si el jugador cae por debajo del terreno, reiniciar posición
+      if (player.position.y < -50) {
+        player.position.set(
+          (terrainBounds.minX + terrainBounds.maxX) / 2,
+          50,
+          (terrainBounds.minZ + terrainBounds.maxZ) / 2
+        );
+        playerState.velocity.set(0, 0, 0);
+      }
+    }
+    
+    function updatePlayer(delta) {
+      if (!player) return;
+      
+      // Aplicar gravedad
+      playerState.velocity.y += playerConfig.gravity * delta;
+      
+      // Limitar velocidad de caída
+      const maxFallSpeed = -20;
+      if (playerState.velocity.y < maxFallSpeed) {
+        playerState.velocity.y = maxFallSpeed;
+      }
+      
+      // Mover en el plano XZ basado en la entrada del jugador
+      const moveSpeed = playerConfig.speed * delta;
+      
+      // Calcular dirección de movimiento basada en la entrada
+      const moveDirection = new THREE.Vector3();
+      
+      if (keys['w'] || keys['ArrowUp']) moveDirection.z = -1;
+      if (keys['s'] || keys['ArrowDown']) moveDirection.z = 1;
+      if (keys['a'] || keys['ArrowLeft']) moveDirection.x = -1;
+      if (keys['d'] || keys['ArrowRight']) moveDirection.x = 1;
+      
+      // Normalizar la dirección
+      if (moveDirection.length() > 0) {
+        moveDirection.normalize();
+        
+        // Mover al jugador en la dirección de la cámara
+        const cameraDirection = new THREE.Vector3();
+        camera.getWorldDirection(cameraDirection);
+        cameraDirection.y = 0;
+        cameraDirection.normalize();
+        
+        // Calcular la dirección de movimiento en el espacio de la cámara
+        const angle = Math.atan2(cameraDirection.x, cameraDirection.z);
+        const moveX = moveDirection.x * Math.cos(angle) - moveDirection.z * Math.sin(angle);
+        const moveZ = moveDirection.x * Math.sin(angle) + moveDirection.z * Math.cos(angle);
+        
+        // Aplicar movimiento
+        player.position.x += moveX * moveSpeed;
+        player.position.z += moveZ * moveSpeed;
+      }
+      
+      // Verificar colisión con el suelo
+      const isOnGround = checkGroundCollision();
+      
+      // Aplicar gravedad si no estamos en el suelo
+      if (!isOnGround) {
+        player.position.y += playerState.velocity.y * delta;
+      }
+      
+      // Manejar salto
+      if ((keys[' '] || keys['Space']) && isOnGround) {
+        playerState.velocity.y = playerConfig.jumpForce;
+        player.position.y += 0.1; // Pequeño impulso para evitar pegarse al suelo
+      }
+      
+      // Aplicar fricción en el suelo
+      if (isOnGround) {
+        playerState.velocity.x *= 0.9;
+        playerState.velocity.z *= 0.9;
+      }
+      
+      // Mantener al jugador dentro de los límites
+      keepPlayerInBounds();
+      
+      // La cámara permanece fija en su posición
+      if (controls) {
+        controls.update();
+      }
+    }
+    
+    function handlePlayerInput() {
+      if (!player) return;
+      
+      // Reiniciar dirección
+      playerState.direction.set(0, 0, 0);
+      
+      // Capturar entrada del teclado
+      const moveSpeed = playerConfig.speed;
+      
+      if (keys['w'] || keys['ArrowUp']) playerState.direction.z = -1;
+      if (keys['s'] || keys['ArrowDown']) playerState.direction.z = 1;
+      if (keys['a'] || keys['ArrowLeft']) playerState.direction.x = -1;
+      if (keys['d'] || keys['ArrowRight']) playerState.direction.x = 1;
+      
+      // Normalizar la dirección
+      if (playerState.direction.length() > 0) {
+        playerState.direction.normalize();
+      }
+      
+      // Aplicar movimiento basado en la dirección de la cámara
+      if (controls && playerState.direction.length() > 0) {
+        const angle = Math.atan2(
+          camera.getWorldDirection(new THREE.Vector3()).x,
+          camera.getWorldDirection(new THREE.Vector3()).z
+        );
+        
+        const moveX = playerState.direction.x * Math.cos(angle) - playerState.direction.z * Math.sin(angle);
+        const moveZ = playerState.direction.x * Math.sin(angle) + playerState.direction.z * Math.cos(angle);
+        
+        playerState.velocity.x = moveX * moveSpeed;
+        playerState.velocity.z = moveZ * moveSpeed;
+      } else {
+        playerState.velocity.x = 0;
+        playerState.velocity.z = 0;
+      }
+      
+      // Salto
+      if ((keys[' '] || keys['Space']) && playerState.canJump) {
+        playerState.velocity.y = playerConfig.jumpForce;
+        playerState.canJump = false;
+      }
+    }
+    
+    // Mapa de teclas presionadas
+    const keys = {};
+    document.addEventListener('keydown', (e) => {
+      keys[e.key.toLowerCase()] = true;
+      // Prevenir comportamiento por defecto de las teclas de dirección
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+        e.preventDefault();
+      }
+    });
+    
+    document.addEventListener('keyup', (e) => {
+      keys[e.key.toLowerCase()] = false;
+    });
+    
     function animate() {
       requestAnimationFrame(animate);
       
-      const delta = clock.getDelta();
+      const delta = Math.min(clock.getDelta(), 0.1); // Limitar delta para evitar saltos grandes
       
-      // Actualizar controles
+      // Manejar entrada del jugador
+      handlePlayerInput();
+      
+      // Actualizar jugador
+      updatePlayer(delta);
+      
+      // Actualizar controles de cámara
       if (controls) controls.update(delta);
-      
-      // Actualizar lógica del jugador aquí si es necesario
       
       renderer.render(scene, camera);
     }

@@ -214,7 +214,7 @@ export class Modal {
                     window.open(portalData.link, '_blank');
                 } else {
                     // Es un archivo local, construir la ruta a la carpeta experiences
-                    const experiencePath = `../experiences/${portalData.link}`;
+                    const experiencePath = `/experiences/${portalData.link}`;
                     window.open(experiencePath, '_blank');
                 }
                 this.hide();

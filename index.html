@@ -1,60 +1,69 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Three.js Landing Space</title>
-<link rel="stylesheet" href="styles.css" />
-<style>
-  .fade-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: white;
-    z-index: 1000;
-    opacity: 1;
-    transition: opacity 1s ease-out;
-    pointer-events: none;
-  }
-  
-  .fade-overlay.hidden {
-    opacity: 0;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Landing Space</title>
+    <!-- Three.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
+    
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .fade-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 1s ease-out;
+            pointer-events: none;
+        }
+        
+        .fade-overlay.hidden {
+            opacity: 0;
+        }
+        
+        #container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .title {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: white;
+            font-size: 2em;
+            font-family: Arial, sans-serif;
+            z-index: 100;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+    </style>
 </head>
 <body>
+    <div id="fadeOverlay" class="fade-overlay"></div>
+    <div id="container"></div>
+    <div class="title">Portals Garden</div>
     
-<div id="fadeOverlay" class="fade-overlay"></div>
-<div id="container"></div>
-
-<!-- Interfaz de usuario -->
-<div class="title">Portals Garden</div>
-
-<script type="module">
-  // Importar Three.js como módulo
-  import * as THREE from 'three';
-  
-  // Aquí puedes acceder a THREE para usarlo en la consola
-  window.THREE = THREE;
-
-  // Ocultar overlay después de que cargue la página
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      const overlay = document.getElementById('fadeOverlay');
-      if (overlay) {
-        overlay.classList.add('hidden');
-        // Eliminar el overlay del DOM después de la transición
-        overlay.addEventListener('transitionend', () => {
-          overlay.remove();
-        }, { once: true });
-      }
-    }, 1300); // Retraso de 1.3 segundos
-  });
-</script>
-
-<!-- Importar tu archivo JavaScript principal -->
-<script type="module" src="./main.js"></script>
+    <!-- Load your JavaScript files -->
+    <script src="js/config/portals.js"></script>
+    <script src="js/main.js"></script>
+    
+    <script>
+        // Hide the loading overlay after page loads
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('fadeOverlay').classList.add('hidden');
+            }, 500);
+        });
+    </script>
 </body>
 </html>

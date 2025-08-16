@@ -43,6 +43,18 @@
             opacity: 0;
         }
     </style>
+    
+  <!-- ✅ Import map para módulos ES desde CDN -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.152.2/build/three.module.js",
+        "three/examples/jsm/controls/OrbitControls": "https://unpkg.com/three@0.152.2/examples/jsm/controls/OrbitControls.js",
+        "three/examples/jsm/loaders/GLTFLoader": "https://unpkg.com/three@0.152.2/examples/jsm/loaders/GLTFLoader.js"
+      }
+    }
+  </script>
+
 </head>
 <body>
     <div id="fadeOverlay" class="fade-overlay"></div>
@@ -50,7 +62,7 @@
 <!-- Interfaz de usuario -->
 <div id="ui-overlay">
     <div class="title">
-    P O R T A L S  G A R D E N
+    Portals Garden
     </div>
 </div>
     

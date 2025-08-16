@@ -8,7 +8,7 @@ export const PORTAL_CONFIG = [
         rotation: { x: 0, y: 0, z: 0 },
         scale: 1.0,
         description: 'El Juego de la Vida',
-        link: 'MaxkodiaPlanet/index.html'
+        link: 'MaxkodiaPlanet/maxkodiaplanet.html'
     },
     {
         id: 'portal-1',
@@ -18,7 +18,7 @@ export const PORTAL_CONFIG = [
         rotation: { x: 0, y: Math.PI/4, z: 0 },
         scale: 2.0,
         description: 'Descripción del proyecto 1',
-        link: 'AnothEarth/index.html' // Ejemplo de enlace externo
+        link: 'AnothEarth/anothearth.html' // Ejemplo de enlace externo
     },
     {
         id: 'portal-2',

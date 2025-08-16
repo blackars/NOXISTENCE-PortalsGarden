@@ -18,7 +18,13 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html')
+        main: resolve(__dirname, 'index.html'),
+        // Experiencias adicionales
+        anothearth: resolve(__dirname, 'experiences/AnothEarth/anothearth.html'),
+        maxkodia: resolve(__dirname, 'experiences/MaxkodiaPlanet/maxkodiaplanet.html'),
+        // 👉 agrega aquí más experiencias si lo necesitas
+        // ejemplo:
+        // otra: resolve(__dirname, 'experiences/OtraExperiencia/index.html')
       },
       output: {
         assetFileNames: (assetInfo) => {

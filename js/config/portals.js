@@ -1,3 +1,4 @@
+// Portals configuration
 export const PORTAL_CONFIG = [
     {
         id: 'LifeGame',
@@ -7,22 +8,22 @@ export const PORTAL_CONFIG = [
         rotation: { x: 0, y: 0, z: 0 },
         scale: 1.0,
         description: 'El Juego de la Vida',
-        link: 'MaxkodiaCanon.html' // Ejemplo de archivo local en la carpeta experiences
+        link: '/experiences/MaxkodiaCanon.html'
     },
     {
         id: 'portal-1',
         name: 'Proyecto 1',
-        modelPath: '/assets/models/adenina.glb',
+        modelPath: '/assets/models/Adenina.glb',
         position: { x: -5, y: 0, z: -5 },
         rotation: { x: 0, y: Math.PI/4, z: 0 },
         scale: 2.0,
         description: 'Descripción del proyecto 1',
-        link: 'AnothEarth.html' // Ejemplo de enlace externo
+        link: '/experiences/AnothEarth.html' // Ejemplo de enlace externo
     },
     {
         id: 'portal-2',
         name: 'Proyecto 1',
-        modelPath: '/assets/models/abstract_sphere.glb',
+        modelPath: '/assets/models/Adenina.glb',
         position: { x: -25, y: 0, z: -25 },
         rotation: { x: 0, y: Math.PI/4, z: 0 },
         scale: 0.2,
@@ -32,7 +33,7 @@ export const PORTAL_CONFIG = [
     {
         id: 'portal-3',
         name: 'Proyecto 1',
-        modelPath: '/assets/models/geometrynodes_scifi_sphere.glb',
+        modelPath: '/assets/models/Adenina.glb',
         position: { x: 25, y: 0, z: 25 },
         rotation: { x: 0, y: Math.PI/4, z: 0 },
         scale: 2.0,
@@ -42,7 +43,7 @@ export const PORTAL_CONFIG = [
     {
         id: 'portal-4',
         name: 'Proyecto 1',
-        modelPath: '/assets/models/rainbow_morph_animation.glb',
+        modelPath: '/assets/models/Adenina.glb',
         position: { x: 45, y: 0, z: 35 },
         rotation: { x: 0, y: Math.PI/4, z: 0 },
         scale: 2.0,

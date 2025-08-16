@@ -1,9 +1,11 @@
 import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { PortalManager } from '/js/managers/PortalManager.js';
-import { Modal } from '/js/ui/Modal.js';
-import { PORTAL_CONFIG } from '/js/config/portals.js';
+
+import { PortalManager } from '@managers/PortalManager.js';
+import { Modal } from '@ui/Modal.js';
+import { PORTAL_CONFIG } from '@config/portals.js';
+
 
 // Variables para la animación del grid
 let gridIntensity = 1.0;

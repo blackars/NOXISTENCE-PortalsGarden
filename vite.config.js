@@ -2,8 +2,16 @@ import { defineConfig } from 'vite';
 import { resolve } from 'path';
 
 export default defineConfig({
-  base: './',  // Cambiado a './' para rutas relativas
+  base: './',
   publicDir: 'public',
+  resolve: {
+    alias: {
+      '@config': resolve(__dirname, 'js/config'),
+      '@managers': resolve(__dirname, 'js/managers'),
+      '@ui': resolve(__dirname, 'js/ui'),
+      '@assets': resolve(__dirname, 'public/assets')
+    }
+  },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',

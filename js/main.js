@@ -79,8 +79,8 @@ camera.position.set(0, 1.6, 5);
 
 // Asegurarse de que el objeto de la cámara esté en la escena
 if (controls.object) {
-    scene.add(controls.object());
-    controls.object().position.y = 1.6; // Altura del personaje
+    scene.add(controls.object);
+    controls.object.position.y = 1.6; // Altura del personaje
 } else {
     console.error('No se pudo obtener el objeto de la cámara de los controles');
 }
@@ -164,7 +164,7 @@ function animate() {
     // Movimiento del jugador
     if (controls.isLocked) {
         const direction = new THREE.Vector3();
-        const cameraObject = controls.object ? controls.object() : camera;
+        const cameraObject = controls.object || camera;
         const frontVector = new THREE.Vector3(0, 0, -1).applyQuaternion(cameraObject.quaternion);
         const sideVector = new THREE.Vector3(1, 0, 0).applyQuaternion(cameraObject.quaternion);
         

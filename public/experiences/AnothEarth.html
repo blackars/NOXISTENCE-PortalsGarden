@@ -26,10 +26,22 @@
     
     @font-face {
       font-family: 'Gobold';
-      src: url('/public/Gobold.otf') format('opentype');
+      src: url('/Gobold.otf') format('opentype');
       font-weight: normal;
       font-style: normal;
       font-display: swap;
+    }
+    
+    /* Loading indicator */
+    #loading {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-family: 'Gobold', sans-serif;
+      font-size: 1.5em;
+      z-index: 1000;
     }
     body { 
       margin: 0; 
@@ -184,8 +196,8 @@
   </div>
   
   <script type="module">
-    import * as THREE from 'three';
-    import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+    import * as THREE from 'https://unpkg.com/three@0.132.2/build/three.module.js';
+    import { GLTFLoader } from 'https://unpkg.com/three@0.132.2/examples/jsm/loaders/GLTFLoader.js';
     // Ocultar overlay después de que cargue la página
     window.addEventListener('load', () => {
       setTimeout(() => {
@@ -356,18 +368,55 @@
     
     loadingManager.onLoad = function () {
       console.log('Carga completada');
-      document.getElementById('loading').style.display = 'none';
+      const loadingElement = document.getElementById('loading');
+      if (loadingElement) {
+        loadingElement.style.display = 'none';
+      }
     };
     
     // Cargar modelo GLB
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader(loadingManager);
     const modelPath = '/assets/models/AnothEarth.glb';
+    
+    // Configurar el manejador de errores
+    loader.manager.onError = function (url) {
+      console.error('Error al cargar el recurso:', url);
+    };
+    
+    // Mostrar indicador de carga si no existe
+    let loadingElement = document.getElementById('loading');
+    if (!loadingElement) {
+      loadingElement = document.createElement('div');
+      loadingElement.id = 'loading';
+      loadingElement.style.position = 'fixed';
+      loadingElement.style.top = '50%';
+      loadingElement.style.left = '50%';
+      loadingElement.style.transform = 'translate(-50%, -50%)';
+      loadingElement.style.color = 'white';
+      loadingElement.style.fontFamily = 'Gobold, sans-serif';
+      loadingElement.style.fontSize = '1.5em';
+      loadingElement.style.zIndex = '1000';
+      loadingElement.textContent = 'Loading experience...';
+      document.body.appendChild(loadingElement);
+    }
+    
+    // Habilitar el modo estricto para depuración
+    'use strict';
+    
+    // Configurar manejo de errores global
+    window.addEventListener('error', (event) => {
+      console.error('Error global:', event.error);
+    });
     
     console.log('Cargando modelo desde:', modelPath);
     
+    console.log('Iniciando carga del modelo desde:', modelPath);
+    
+    // Cargar el modelo con manejo de errores mejorado
     loader.load(
       modelPath,
       function (gltf) {
+        console.log('Modelo cargado exitosamente');
         console.log('Modelo cargado correctamente');
         solarSystem = gltf.scene;
         
@@ -434,9 +483,18 @@
         
         console.log('Cámara posicionada en:', camera.position);
       },
-      undefined,
+      // onProgress callback
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total * 100) + '% cargado');
+      },
+      // onError callback
       function (error) {
         console.error('Error al cargar el modelo:', error);
+        const loadingElement = document.getElementById('loading');
+        if (loadingElement) {
+          loadingElement.textContent = 'Error al cargar el modelo. Por favor, recarga la página.';
+          loadingElement.style.color = '#ff5555';
+        }
       }
     );
 

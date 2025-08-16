@@ -134,7 +134,7 @@ function createSkybox() {
 // Cargar modelo
 function loadModel() {
   const loader = new GLTFLoader();
-  const modelPath = '/assets/models/AnothEarth.glb';
+  const modelPath = '/assets/models/MaxkodiaPlanet.glb';
 
   loader.load(modelPath, (gltf) => {
     solarSystem = gltf.scene;

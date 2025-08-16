@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Maxkodia Planet</title>
+  <title>AnothEarth</title>
   <style>
     /* Overlay de transición */
     .fade-overlay {
@@ -51,6 +51,8 @@
       text-shadow: 2px 2px 4px rgba(210, 210, 210, 0.5);
       z-index: 100;
       pointer-events: none;
+      white-space: nowrap;
+
     }
 
     .controls {
@@ -167,14 +169,10 @@
 </head>
 <body>
   <!-- Usando una versión estable y probada de Three.js -->
-  <script src="https://unpkg.com/three@0.132.2/build/three.min.js"
-  integrity="sha384-abc123..." 
-  crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/three@0.132.2/examples/js/loaders/GLTFLoader.js"
-  integrity="sha384-abc123..." 
-  crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/three@0.132.2/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
   <div id="fadeOverlay" class="fade-overlay"></div>
-  <div class="title">Maxkodia Planet</div>
+  <div class="title">AnothEarth</div>
   <div id="planetInfo" class="planet-info">
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
@@ -235,7 +233,7 @@
     function createSkybox() {
       // Crear geometría para las estrellas
       const starsGeometry = new THREE.BufferGeometry();
-      const starCount = 5000;
+      const starCount = 10000;
       
       // Crear posiciones aleatorias para las estrellas
       const positions = new Float32Array(starCount * 3);
@@ -363,7 +361,7 @@
     
     // Cargar modelo GLB
     const loader = new THREE.GLTFLoader();
-    const modelPath = '/assets/models/MaxkodiaPlanet.glb';
+    const modelPath = '/assets/models/AnothEarth.glb';
     
     console.log('Cargando modelo desde:', modelPath);
     

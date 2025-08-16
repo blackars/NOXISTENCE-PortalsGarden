@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AnothEarth</title>
+  <style>
+    /* Overlay de transición */
+    .fade-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: black;
+      z-index: 1000;
+      opacity: 1;
+      transition: opacity 1s ease-out;
+      pointer-events: none;
+    }
+    
+    .fade-overlay.hidden { opacity: 0; }
+    
+    @font-face {
+      font-family: 'Gobold';
+      src: url('../../Gobold.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    
+    body { 
+      margin: 0; 
+      background: black; 
+      overflow: hidden;
+      font-family: 'Gobold', sans-serif;
+    }
+    
+    canvas { 
+      display: block; 
+      width: 100%;
+      height: 100%;
+    }
+    
+    .title {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: white;
+      font-size: 2em;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      z-index: 100;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    
+    .controls {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      color: white;
+      font-family: 'Gobold', sans-serif;
+    }
+    
+    #loading {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-family: 'Gobold', sans-serif;
+      font-size: 1.5em;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <div id="fadeOverlay" class="fade-overlay"></div>
+  <div id="container"></div>
+  <div class="title">AnothEarth</div>
+  <div id="loading">Cargando experiencia...</div>
+  
+  <script type="module" src="main.js"></script>
+
+</body>
+</html>

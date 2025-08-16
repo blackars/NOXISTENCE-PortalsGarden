@@ -1,218 +1,9 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>AnothEarth</title>
-  <style>
-    /* Overlay de transición */
-    .fade-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: black;
-      z-index: 1000;
-      opacity: 1;
-      transition: opacity 1s ease-out;
-      pointer-events: none;
-    }
-    
-    .fade-overlay.hidden {
-      opacity: 0;
-    }
-    
-    
-    @font-face {
-      font-family: 'Gobold';
-      src: url('/Gobold.otf') format('opentype');
-      font-weight: normal;
-      font-style: normal;
-      font-display: swap;
-    }
-    
-    /* Loading indicator */
-    #loading {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      font-family: 'Gobold', sans-serif;
-      font-size: 1.5em;
-      z-index: 1000;
-    }
-    body { 
-      margin: 0; 
-      background: black; 
-      overflow: hidden;
-      font-family: 'Gobold', sans-serif;
-    }
-    canvas { 
-      display: block; 
-      width: 100%;
-      height: 100%;
-    }
-    .title {
-      position: absolute;
-      top: 40px;
-      left: 40px;
-      color: white;
-      font-size: 3em;
-      text-shadow: 2px 2px 4px rgba(210, 210, 210, 0.5);
-      z-index: 100;
-      pointer-events: none;
-      white-space: nowrap;
-
-    }
-
-    .controls {
-      position: absolute;
-      bottom: 40px;
-      left: 40px;
-      color: rgb(255, 255, 255);
-      background: transparent;
-      padding: 10px;
-      font-family: 'Gobold', sans-serif;
-      font-size: 0.9em;
-      letter-spacing: 1px;
-    }
-    
-    .planet-info {
-      position: absolute;   
-      top: 100px;
-      left: 40px;
-      width: 80%;
-      max-width: 300px;
-      background: transparent;
-      color: white;
-      padding: 20px 0 0 0;
-      font-family: 'Gobold', sans-serif;
-      line-height: 1.5;
-      display: none;
-      backdrop-filter: blur(1px);
-      font-size: 14px;
-    }
-    
-    .planet-info.visible {
-      display: block;
-    }
-    
-    .landing-button {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 8px 20px;
-      background: transparent;
-      color: white;
-      border: 1px solid white;
-      text-decoration: none;
-      font-family: 'Gobold', sans-serif;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      border-radius: 0;
-    }
-    
-    .landing-button:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateY(-2px);
-      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.2);
-    }
-    
-    @media (max-width: 768px) {
-      .planet-info {
-        width: 80%;
-        left: 10%;
-        top: 80px;
-        font-size: 12px;
-        line-height: 1.3;
-      }
-    }
-    
-    /* Estilos personalizados para el slider */
-    input[type="range"] {
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-      width: 150px;
-      height: 2px;
-      background: rgba(255, 255, 255, 0.2);
-      outline: none;
-      margin: 10px 0;
-    }
-    
-    /* Estilo para el thumb (el control deslizante) */
-    input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 12px;
-      height: 12px;
-      background: #474747;
-      cursor: pointer;
-      border: none;
-      border-radius: 0;
-      transition: all 0.1s ease;
-    }
-    
-    input[type="range"]::-moz-range-thumb {
-      width: 12px;
-      height: 12px;
-      background: #7b7b7b;
-      cursor: pointer;
-      border: none;
-      border-radius: 0;
-      transition: all 0.1s ease;
-    }
-    
-    /* Efecto hover */
-    input[type="range"]:hover::-webkit-slider-thumb {
-      transform: scale(1.3);
-      background: #ffffff;
-    }
-    
-    input[type="range"]:hover::-moz-range-thumb {
-      transform: scale(1.3);
-      background: #474747;
-    }
-  </style>
-</head>
-<body>
-
-  <div id="fadeOverlay" class="fade-overlay"></div>
-  <div class="title">AnothEarth</div>
-  <div id="planetInfo" class="planet-info">
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    <a href="#" id="landingButton" class="landing-button">Landing</a>
-  </div>
-  <div class="controls">
-    <div>
-      Timepass
-      <input class="border-none" type="range" id="animationSpeed" min="0.1" max="2" step="0.1" value="1">
-    </div>
-  </div>
-  
-  <script type="module">
-    import * as THREE from 'https://unpkg.com/three@0.132.2/build/three.module.js';
-    import { GLTFLoader } from 'https://unpkg.com/three@0.132.2/examples/jsm/loaders/GLTFLoader.js';
-    // Ocultar overlay después de que cargue la página
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const overlay = document.getElementById('fadeOverlay');
-        if (overlay) {
-          overlay.classList.add('hidden');
-          // Eliminar el overlay del DOM después de la transición
-          overlay.addEventListener('transitionend', () => {
-            overlay.remove();
-          }, { once: true });
-        }
-      }, 1000); // Pequeño retraso para asegurar que todo esté listo
-    });
-    
-    // Variables de control
+import * as THREE from 'three';
+import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+ 
+ 
+ // Variables de control
     let modelScale = 1.0;
     let solarSystem = null; 
     let mixer = null;
@@ -324,8 +115,11 @@
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Limitar el pixel ratio
-    document.body.appendChild(renderer.domElement);
+    
+    // Asegurarse de que el contenedor esté vacío antes de añadir el renderizador
+    const container = document.getElementById('container');
+    container.innerHTML = '';
+    container.appendChild(renderer.domElement);
 
     // Luces
     // Luz ambiental suave
@@ -690,7 +484,3 @@
     window.addEventListener('touchmove', onTouchMove, { passive: false });
     window.addEventListener('mouseup', onPointerUp);
     
-
-  </script>
-</body>
-</html>

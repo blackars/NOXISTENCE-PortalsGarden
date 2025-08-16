@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructions - Portals Garden</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: transparent;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .instructions-container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 100%;
+            color:transparent;
+            padding: 30px;
+            border-radius: none;
+            text-align: center;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 28px;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 5px 10px;
+            line-height: 1;
+        }
+
+        .close-button:hover {
+            color: #ffffff;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            color: #ffffff;
+        }
+
+        p {
+            color: #ffffff;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
+        .mouse-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 20px;
+        }
+
+        .mouse-label {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .mouse {
+            width: 30px;
+            height: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            position: relative;
+            margin: 0 auto 10px;
+            display: inline-block;
+        }
+
+        .mouse:before {
+            content: '';
+            width: 6px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 50%;
+        }
+
+        .mouse-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .instructions-grid {
+            display: grid;
+            grid-template-columns: 40px 1fr;
+            gap: 12px;
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .key {
+            background: transparent;
+            border-radius: none;
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            min-width: 40px;
+            color: #ffffff;
+        }
+
+
+
+        .start-button {
+            background: transparent;
+            color: #ffffff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: block;
+            width: 100%;
+            max-width: 250px;
+            margin: 20px auto 0;
+        }
+
+        .start-button:hover {
+            background: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2em;
+            color: #ffffff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .controls-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin: 40px auto;
+            max-width: 800px;
+            width: 100%;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .keys-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 8px;
+            width: 120px;
+            height: 120px;
+        }
+        
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 160px;
+        }
+        
+        .control-group p {
+            margin: 3px 0 0 0;
+            font-size: 0.9em;
+            color: #ffffff;
+            text-align: center;
+        }
+        
+        .mouse-keys {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .mouse-keys p {
+            margin: 0 5px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .key {
+            background: rgba(0, 0, 0, 0.911);
+            color: #ffffff;
+            border-radius: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .key:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .key-w { 
+            grid-column: 2;
+            grid-row: 1;
+        }
+        .key-a { 
+            grid-column: 1;
+            grid-row: 2;
+        }
+        .key-s { 
+            grid-column: 2;
+            grid-row: 2;
+        }
+        .key-d { 
+            grid-column: 3;
+            grid-row: 2;
+        }
+        .key-esc { 
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+        
+        .key-p {
+            font-size: 0.9em;
+            margin-bottom: 20px;
+        }
+
+        .mouse {
+            width: 40px;
+            height: 60px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            position: relative;
+            margin: 0 auto 15px;
+        }
+
+        .mouse:before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.7);
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            border-radius: 50%;
+        }
+
+        .start-button {
+            background: transparent;
+            color: #ffffff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .start-button:hover {
+            background: #36353526;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .mouse-container {
+            margin: 20px 0;
+        }
+
+        .mouse-label {
+            margin-top: 5px;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="instructions-container">
+        <div class="modal-content" style="background: transparent; backdrop-filter: blur(5px); padding: 30px; max-width: 500px; width: 90%;">
+            <button class="close-button" id="closeButton">&times;</button>
+            <h1>In this Squared-Place...</h1>
+            <p>Move your mouse to look around and click on the portals to explore.</p>
+                <div class="controls-container">
+                    <!-- WASD Keys -->
+                    <div class="control-group">
+                        <div class="keys-container">
+                            <div class="key key-w">W</div>
+                            <div class="key key-a">A</div>
+                            <div class="key key-s">S</div>
+                            <div class="key key-d">D</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Mouse -->
+                    <div class="control-group">
+                        <div class="mouse"></div>
+                    </div>
+                    
+                    <!-- ESC & P Keys -->
+                    <div class="control-group">
+                        <div class="mouse-keys">
+                            <div class="key key-esc">ESC</div>
+                            <p>or</p>
+                            <div class="key key-p">P</div>
+                        </div>
+                        <p>Toggle Mouse</p>
+                    </div>
+                </div>
+                <p>(This Experience is not available on mobile devices)</p>
+                <button class="start-button" id="startButton">Start</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para enviar mensaje al padre
+        function sendCloseMessage() {
+            if (window.parent) {
+                window.parent.postMessage('closeInstructions', '*');
+            } else {
+                // Si no hay padre, cerrar la ventana
+                window.close();
+            }
+        }
+
+        // Cerrar con el botón
+        document.getElementById('closeButton').addEventListener('click', sendCloseMessage);
+
+        // Cerrar con Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                sendCloseMessage();
+            }
+        });
+
+        // Cerrar al hacer clic en el botón de comenzar
+        document.querySelector('.start-button').addEventListener('click', sendCloseMessage);
+
+        // Notificar al padre que el contenido está listo
+        window.addEventListener('load', function() {
+            if (window.parent) {
+                window.parent.postMessage('instructionsLoaded', '*');
+            }
+        });
+    </script>
+</body>
+</html>

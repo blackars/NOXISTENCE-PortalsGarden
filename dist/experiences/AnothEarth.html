@@ -168,9 +168,7 @@
   </style>
 </head>
 <body>
-  <!-- Usando una versión estable y probada de Three.js -->
-  <script src="https://unpkg.com/three@0.132.2/build/three.min.js"></script>
-  <script src="https://unpkg.com/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
+
   <div id="fadeOverlay" class="fade-overlay"></div>
   <div class="title">AnothEarth</div>
   <div id="planetInfo" class="planet-info">
@@ -185,7 +183,9 @@
     </div>
   </div>
   
-  <script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
     // Ocultar overlay después de que cargue la página
     window.addEventListener('load', () => {
       setTimeout(() => {

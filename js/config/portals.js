@@ -24,11 +24,11 @@ export const PORTAL_CONFIG = [
         id: 'portal-2',
         name: 'Proyecto 1',
         modelPath: '/assets/models/Adenina.glb',
-        position: { x: -25, y: 0, z: -25 },
+        position: { x: -10, y: 0, z: 0 },
         rotation: { x: 0, y: Math.PI/4, z: 0 },
-        scale: 0.2,
+        scale: 1.0,
         description: 'Descripción del proyecto 1',
-        link: 'https://ejemplo.com/experiencia' // Ejemplo de enlace externo
+        link: 'CleanSquaredPlace/cleansquaredplace.html' // Ejemplo de enlace externo
     },
     {
         id: 'portal-3',
@@ -44,7 +44,7 @@ export const PORTAL_CONFIG = [
         id: 'portal-4',
         name: 'Proyecto 1',
         modelPath: '/assets/models/Adenina.glb',
-        position: { x: 45, y: 0, z: 35 },
+        position: { x: 50, y: 0, z: 50 },
         rotation: { x: 0, y: Math.PI/4, z: 0 },
         scale: 2.0,
         description: 'Descripción del proyecto 1',

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Maxkodia Crater Exploration</title>
+  <style>
+    body { 
+      margin: 0; 
+      overflow: hidden;
+      background: white;
+    }
+    @font-face {
+      font-family: 'Gobold';
+      src: url('/Gobold.otf') format('opentype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+    canvas { 
+      display: block; 
+    }
+    .title {
+      position: absolute;
+      top: 40px;
+      left: 40px;
+      font-family: 'Gobold', ui-sans-serif;
+      font-size: clamp(36px, 6vmin, 60px);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      white-space: nowrap;
+      color: #000;
+      z-index: 20;
+    }
+
+  </style>  
+  <script type="module" src="./combo1.js"></script>
+</head>
+<body>
+  <div class="title">Canon</div>
+</body>
+</html>

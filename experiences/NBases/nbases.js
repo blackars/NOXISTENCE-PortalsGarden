@@ -366,7 +366,7 @@ const COMBOS = [
     secuencia: ['adenina', 'timina', 'citosina', 'guanina'],
     nombre: 'Combinación ATCG',
     modelo: '/assets/models/larvae.glb',
-    enlace: '/experiences/Combo1.html' // Archivo HTML del proyecto
+    enlace: '/experiences/NBases/combo1/combo1.html' // Archivo HTML del proyecto
   },
   // 2) Pares complementarios opuestos
   {

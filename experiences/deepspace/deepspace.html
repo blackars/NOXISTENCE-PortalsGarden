@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Space Simulator</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: sans-serif;
+        }
+
+        #simulator-container {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+
+        /* Opcional: marcador de tiempo */
+        #timer {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: white;
+            font-size: 1.5em;
+            background: rgba(0,0,0,0.5);
+            padding: 5px 10px;
+            border-radius: 8px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div id="simulator-container"></div>
+    <div id="timer">Tiempo: 0s</div>
+
+    <script type="module">
+        import { DeepSpaceSimulator } from './deepspace.js';
+
+        const simulator = new DeepSpaceSimulator('simulator-container');
+
+        // Actualización del contador visual de tiempo
+        const timerEl = document.getElementById('timer');
+        function updateTimer() {
+            timerEl.textContent = `Tiempo: ${Math.floor(simulator.elapsedTime)}s`;
+            requestAnimationFrame(updateTimer);
+        }
+        updateTimer();
+    </script>
+</body>
+</html>

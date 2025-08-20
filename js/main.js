@@ -162,39 +162,29 @@ function animate() {
     const intensity = gridIntensity * 0.8 + 0.2; // Mantener un mínimo de brillo
     gridHelper.material.color.setRGB(intensity, intensity, intensity);
     
-    // Movimiento del jugador
+    // Movimiento del jugador (versión mejorada)
     if (controls.isLocked) {
-        const direction = new THREE.Vector3();
-        const cameraObject = controls.getObject() || camera;
-        const frontVector = new THREE.Vector3(0, 0, -1).applyQuaternion(cameraObject.quaternion);
-        const sideVector = new THREE.Vector3(1, 0, 0).applyQuaternion(cameraObject.quaternion);
+        const deltaTime = Math.min(0.1, delta);
+        const moveSpeed = 5 * deltaTime;
         
-        // Calcular movimiento deseado
-        if (keys['KeyW'] || keys['ArrowUp']) direction.add(frontVector);
-        if (keys['KeyS'] || keys['ArrowDown']) direction.sub(frontVector);
-        if (keys['KeyA'] || keys['ArrowLeft']) direction.sub(sideVector);
-        if (keys['KeyD'] || keys['ArrowRight']) direction.add(sideVector);
+        // Calcular movimiento
+        const moveX = (keys['KeyD'] || keys['ArrowRight'] ? 1 : 0) - (keys['KeyA'] || keys['ArrowLeft'] ? 1 : 0);
+        const moveZ = (keys['KeyW'] || keys['ArrowUp'] ? 1 : 0) - (keys['KeyS'] || keys['ArrowDown'] ? 1 : 0);
         
-        direction.y = 0;
-        if (direction.lengthSq() > 0) direction.normalize();
+        // Mover hacia adelante/atrás
+        if (moveZ !== 0) {
+            controls.moveForward(moveZ * moveSpeed);
+        }
+        // Mover izquierda/derecha
+        if (moveX !== 0) {
+            controls.moveRight(moveX * moveSpeed);
+        }
         
-        // Calcular nueva posición
-        const currentPosition = new THREE.Vector3().copy(camera.position);
-        const moveX = direction.x * moveSpeed * delta;
-        const moveZ = -direction.z * moveSpeed * delta;
-        
-        // Límites del área (mitad del tamaño del suelo)
+        // Aplicar límites del área (mitad del tamaño del suelo)
         const limit = 50;
-        const newX = currentPosition.x + moveX;
-        const newZ = currentPosition.z + moveZ;
-        
-        // Aplicar movimiento solo si no se sale de los límites
-        if (Math.abs(newX) <= limit) {
-            controls.moveRight(moveX);
-        }
-        if (Math.abs(newZ) <= limit) {
-            controls.moveForward(moveZ);
-        }
+        const pos = controls.getObject().position;
+        pos.x = THREE.MathUtils.clamp(pos.x, -limit, limit);
+        pos.z = THREE.MathUtils.clamp(pos.z, -limit, limit);
     }
     
     renderer.render(scene, camera);

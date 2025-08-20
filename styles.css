@@ -22,6 +22,14 @@ body, html {
   font-style: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: 'NumberOne';
+  src: url('public/numberone.woff2') format('woff2'),
+       url('public/numberone.woff') format('woff');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
 #container {
   width: 100vw;
   height: 100vh;

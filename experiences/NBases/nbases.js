@@ -365,7 +365,7 @@ const COMBOS = [
   {
     secuencia: ['adenina', 'timina', 'citosina', 'guanina'],
     nombre: 'Combinación ATCG',
-    modelo: '/assets/models/larvae.glb',
+    modelo: '/assets/models/beetle.glb',
     enlace: '/experiences/NBases/combo1/combo1.html' // Archivo HTML del proyecto
   },
   // 2) Pares complementarios opuestos
@@ -526,7 +526,7 @@ function openModalWithModel(modelPath, comboLink = '#') {
     (gltf) => {
       modalRoot = gltf.scene;
       modalRoot.position.set(0, 0, 0);
-      modalRoot.scale.set(10, 10, 10);
+      modalRoot.scale.set(1, 1, 1);
       modalScene.add(modalRoot);
 
       if (gltf.animations && gltf.animations.length) {
@@ -615,7 +615,7 @@ function animate() {
 
   // Animación de expansión del círculo (sin invadir moléculas)
   if (circleActive && circleMesh) {
-    const maxScale = 1; // suficiente para ser visible pero sin tocar zonas
+    const maxScale = 13; // suficiente para ser visible pero sin tocar zonas
     const s = circleMesh.scale.x + 0.01;
     if (s < maxScale) {
       circleMesh.scale.set(s, s, s);

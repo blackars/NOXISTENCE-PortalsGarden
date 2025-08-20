@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import viteCompression from 'vite-plugin-compression';
 
 export default defineConfig({
   base: './',
@@ -42,5 +43,19 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true
-  }
+  },
+  plugins: [
+    viteCompression({
+      algorithm: 'brotliCompress',
+      ext: '.br',
+      threshold: 10240, // Comprime archivos mayores a 10KB
+      deleteOriginFile: false
+    }),
+    viteCompression({
+      algorithm: 'gzip',
+      ext: '.gz',
+      threshold: 10240,
+      deleteOriginFile: false
+    })
+  ]
 });

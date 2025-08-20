@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Visualizador de Bases Nitrogenadas</title>
+<style>
+    body { 
+        margin:0; 
+        background: transparent;
+        font-family:sans-serif; 
+        overflow:hidden;
+    }
+    @font-face {
+        font-family: 'Gobold';
+        src: url('/Gobold.otf') format('opentype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+        }
+
+    .title {
+        position: fixed;
+        top: 30px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-family: 'Gobold', ui-sans-serif;
+        font-size: clamp(36px, 6vmin, 60px);
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        white-space: nowrap;
+        color: #000;
+        z-index: 20;
+        padding: 0 20px;
+        pointer-events: none;
+        }
+    #lateral {
+        position: absolute;
+        top: 0; 
+        left: 0;
+        width: 160px;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(12px) saturate(200%) contrast(120%);
+        -webkit-backdrop-filter: blur(12px) saturate(200%) contrast(120%);
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        padding: 20px 0;
+        z-index: 1;
+        overflow: hidden;
+        transition: all 0.4s ease;
+        transform: translateZ(0);
+    }
+    .item {
+        width: 100px;
+        background: transparent;
+        height: 100px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 0px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: grab;
+        transform: translateY(0);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    /* Liquid glass effect overlay */
+    .item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.4) 0%,
+            rgba(255, 255, 255, 0.1) 50%,
+            rgba(255, 255, 255, 0.4) 100%
+        );
+        transform: translateX(-100%);
+        transition: transform 0.6s ease;
+    }
+    
+    .item:hover {
+        transform: translateY(-3px);
+
+    }
+    
+    .item:hover::before {
+        transform: translateX(100%);
+    }
+    
+    .item:active {
+        cursor: grabbing;
+        transform: translateY(-1px);
+        user-select: none;
+        background: transparent  ;
+        overflow: hidden;
+        position: relative;
+    }
+    .item canvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+    }
+    .item:active { cursor: grabbing; }
+    #escena {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        border: none;
+        outline: none;
+        z-index: -1;
+    }
+    
+    #lateral {
+        position: absolute;
+        top: 0; 
+        left: 0;
+        width: 160px;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        padding: 20px 0;
+        z-index: 1;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+
+    /* ============================
+       OVERLAY DE CÓDIGO DE ACCESO
+       ============================ */
+    #access-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: all 0.6s ease;
+    }
+
+    #access-overlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-20px);
+    }
+
+    .access-container {
+        text-align: center;
+        padding: 40px;
+        border-radius: none;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 2px solid rgb(0, 0, 0);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        width: 90%;
+        animation: slideIn 0.8s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .access-title {
+        font-family: 'Gobold', ui-sans-serif;
+        font-size: clamp(24px, 4vmin, 32px);
+        color: #000;
+        margin-bottom: 10px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+
+    #code-input {
+        width: 100%;
+        max-width: 200px;
+        padding: 15px 20px;
+        font-size: 18px;
+        font-family: 'Gobold', monospace;
+        text-align: center;
+        text-transform: uppercase;
+        border: 2px solid rgba(0, 0, 0, 0.2);
+        border-radius: none;
+        background: rgba(255, 255, 255, 0.9);
+        outline: none;
+        transition: all 0.3s ease;
+        letter-spacing: 3px;
+        font-weight: bold;
+    }
+
+    #code-input:focus {
+        border-color: #000;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        background: rgba(255, 255, 255, 1);
+    }
+
+    #code-input.error {
+        border-color: #ff4757;
+        background: rgba(255, 71, 87, 0.1);
+        animation: shake 0.5s ease-in-out;
+    }
+
+    #code-input.success {
+        border-color: #2ed573;
+        background: rgba(46, 213, 115, 0.1);
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+
+    .access-hint {
+        margin-top: 20px;
+        font-size: 14px;
+        color: #000000;
+        font-family: 'Gobold', ui-sans-serif;
+        font-style: bold;
+    }
+
+    .access-error {
+        margin-top: 15px;
+        color: #ff4757;
+        font-size: 14px;
+        font-family: 'Gobold', ui-sans-serif;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .access-error.show {
+        opacity: 1;
+    }
+
+    /* Efecto de DNA en el fondo del overlay */
+    .dna-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.03;
+        z-index: -1;
+        background-image: 
+            repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(0, 0, 0, 0.05) 10px,
+                rgba(0, 0, 0, 0.05) 20px
+            ),
+            repeating-linear-gradient(
+                -45deg,
+                transparent,
+                transparent 10px,
+                rgba(0, 0, 0, 0.05) 10px,
+                rgba(0, 0, 0, 0.05) 20px
+            );
+    }
+</style>
+</head>
+<body>
+    <!-- OVERLAY DE CÓDIGO DE ACCESO -->
+    <div id="access-overlay">
+        <div class="dna-background"></div>
+        <div class="access-container">
+            <h1 class="access-title">N Bases</h1>
+            <input 
+                type="text" 
+                id="code-input" 
+                maxlength="4" 
+                placeholder="****"
+                autocomplete="off"
+                spellcheck="false"
+            >
+            <div class="access-hint">If you have a code insert it here</div>
+            <div class="access-error" id="error-message">Try again</div>
+        </div>
+    </div>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div class="title">Nitrogenous Bases</div>
+    <div id="lateral">
+        <div class="item" draggable="true" data-mol="adenina">
+            <canvas id="thumb-adenina" width="100" height="100"></canvas>
+        </div>
+        <div class="item" draggable="true" data-mol="timina">
+            <canvas id="thumb-timina" width="100" height="100"></canvas>
+        </div>
+        <div class="item" draggable="true" data-mol="citosina">
+            <canvas id="thumb-citosina" width="100" height="100"></canvas>
+        </div>
+        <div class="item" draggable="true" data-mol="guanina">
+            <canvas id="thumb-guanina" width="100" height="100"></canvas>
+        </div>
+    </div>
+    <canvas id="escena"></canvas>
+
+    <!-- SCRIPT DE MANEJO DEL OVERLAY -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const overlay = document.getElementById('access-overlay');
+            const codeInput = document.getElementById('code-input');
+            const errorMessage = document.getElementById('error-message');
+            const correctCode = 'ATCG';
+            
+            // Enfocar automáticamente el input
+            codeInput.focus();
+            
+            // Manejar entrada de código
+            codeInput.addEventListener('input', function(e) {
+                const value = e.target.value.toUpperCase();
+                e.target.value = value;
+                
+                // Resetear estados visuales
+                codeInput.classList.remove('error', 'success');
+                errorMessage.classList.remove('show');
+                
+                // Verificar código cuando se completen 4 caracteres
+                if (value.length === 4) {
+                    setTimeout(() => {
+                        if (value === correctCode) {
+                            // Código correcto
+                            codeInput.classList.add('success');
+                            setTimeout(() => {
+                                overlay.classList.add('hidden');
+                                // Cargar el script principal después de ocultar el overlay
+                                setTimeout(() => {
+                                    loadMainScript();
+                                }, 300);
+                            }, 500);
+                        } else {
+                            // Código incorrecto
+                            codeInput.classList.add('error');
+                            errorMessage.classList.add('show');
+                            setTimeout(() => {
+                                codeInput.value = '';
+                                codeInput.classList.remove('error');
+                                errorMessage.classList.remove('show');
+                                codeInput.focus();
+                            }, 1500);
+                        }
+                    }, 200);
+                }
+            });
+            
+            // Manejar tecla Enter
+            codeInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const value = e.target.value.toUpperCase();
+                    if (value.length < 4) {
+                        codeInput.classList.add('error');
+                        errorMessage.textContent = 'El código debe tener 4 caracteres.';
+                        errorMessage.classList.add('show');
+                        setTimeout(() => {
+                            codeInput.classList.remove('error');
+                            errorMessage.classList.remove('show');
+                            errorMessage.textContent = 'Código incorrecto. Inténtalo de nuevo.';
+                        }, 2000);
+                    }
+                }
+            });
+            
+            // Función para cargar el script principal
+            function loadMainScript() {
+                const script = document.createElement('script');
+                script.type = 'module';
+                script.src = './nbases.js';
+                script.onload = function() {
+                    console.log('✅ Experiencia de Bases Nitrogenadas cargada correctamente');
+                };
+                script.onerror = function() {
+                    console.error('❌ Error al cargar nbases.js');
+                };
+                document.body.appendChild(script);
+            }
+            
+            // Prevenir recarga accidental
+            window.addEventListener('beforeunload', function(e) {
+                if (!overlay.classList.contains('hidden')) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

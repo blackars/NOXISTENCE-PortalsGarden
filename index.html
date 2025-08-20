@@ -63,6 +63,16 @@
       }, 1300);
     });
   </script>
+  <div id="music"></div>
+
+  <script type="module">
+    import createBgMusic from "./bgmusic.js";
+
+    createBgMusic("music", {
+      position: "top-right",
+      src: "/sounds/ambient.mp3"
+    });
+  </script>
 
   <!-- ✅ Script empaquetado -->
   <script type="module" src="/js/main.js"></script>

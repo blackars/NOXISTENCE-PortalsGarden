@@ -23,6 +23,7 @@ export default defineConfig({
         // Experiencias adicionales
         anothearth: resolve(__dirname, 'experiences/AnothEarth/anothearth.html'),
         maxkodia: resolve(__dirname, 'experiences/MaxkodiaPlanet/maxkodiaplanet.html'),
+        gameoflife: resolve(__dirname, 'experiences/GameOfLife/gameoflife.html'),
         // 👉 agrega aquí más experiencias si lo necesitas
         // ejemplo:
         // otra: resolve(__dirname, 'experiences/OtraExperiencia/index.html')

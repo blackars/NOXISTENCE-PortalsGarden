@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-export function initLife3D(container) {
+export function initGameofLife(container) {
   // Configuration
   const size = 20; // N x N grid
   let running = false;

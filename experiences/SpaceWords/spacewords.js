@@ -59,7 +59,7 @@ export function initSpaceWords(container) {
     // ============================
     const phrases = [
         {
-            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+            text: "And the sun saw heaven again",
             position: new THREE.Vector3(50, 20, 30), // Posición en la esfera
             element: null,
             active: false
@@ -143,81 +143,127 @@ export function initSpaceWords(container) {
     // Skybox de respaldo
     // ============================
     function createFallbackSkybox() {
-        const geometry = new THREE.SphereGeometry(100, 64, 32);
+        // Crear una escena separada para el fondo fijo
+        const bgScene = new THREE.Scene();
+        const bgCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
         
-        // Crear textura estrellada simple
+        // Crear textura estrellada
         const canvas = document.createElement('canvas');
-        canvas.width = 1024;
-        canvas.height = 512;
+        canvas.width = 2048;  // Mayor resolución para mejor calidad
+        canvas.height = 1024;
         const context = canvas.getContext('2d');
         
-        // Fondo degradado espacial
-        const gradient = context.createRadialGradient(512, 256, 0, 512, 256, 512);
-        gradient.addColorStop(0, '#001a4d');
-        gradient.addColorStop(0.3, '#000d26');
-        gradient.addColorStop(0.6, '#000815');
-        gradient.addColorStop(1, '#000510');
+        // Fondo espacial oscuro
+        const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
+        gradient.addColorStop(0, '#000428');
+        gradient.addColorStop(1, '#004e92');
         context.fillStyle = gradient;
-        context.fillRect(0, 0, 1024, 512);
+        context.fillRect(0, 0, canvas.width, canvas.height);
         
-        // Añadir nebulosas de colores
-        for (let i = 0; i < 15; i++) {
-            const x = Math.random() * 1024;
-            const y = Math.random() * 512;
-            const radius = 50 + Math.random() * 150;
+        // Función para añadir nebulosas
+        function addNebula(x, y, radius, color, alpha) {
+            const gradient = context.createRadialGradient(x, y, 0, x, y, radius);
+            gradient.addColorStop(0, `${color}${Math.floor(alpha * 255).toString(16).padStart(2, '0')}`);
+            gradient.addColorStop(1, `${color}00`);
             
-            const nebulaGradient = context.createRadialGradient(x, y, 0, x, y, radius);
-            const colors = ['#1a0d4d', '#4d0d1a', '#0d4d1a', '#4d1a0d'];
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            
-            nebulaGradient.addColorStop(0, color + '40');
-            nebulaGradient.addColorStop(0.5, color + '20');
-            nebulaGradient.addColorStop(1, 'transparent');
-            
-            context.fillStyle = nebulaGradient;
-            context.fillRect(x - radius, y - radius, radius * 2, radius * 2);
+            context.fillStyle = gradient;
+            context.globalCompositeOperation = 'lighter';
+            context.beginPath();
+            context.arc(x, y, radius, 0, Math.PI * 2);
+            context.fill();
+            context.globalCompositeOperation = 'source-over';
         }
         
-        // Añadir estrellas brillantes
-        for (let i = 0; i < 3000; i++) {
-            const x = Math.random() * 1024;
-            const y = Math.random() * 512;
-            const brightness = Math.random();
-            const size = Math.random() * 1.5 + 0.5;
+        // Añadir nebulosas
+        const nebulaColors = ['#3a1c71', '#d76d77', '#ffaf7b', '#11998e', '#38ef7d', '#a8e063'];
+        for (let i = 0; i < 20; i++) {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const radius = 100 + Math.random() * 300;
+            const color = nebulaColors[Math.floor(Math.random() * nebulaColors.length)];
+            addNebula(x, y, radius, color, 0.1 + Math.random() * 0.2);
+        }
+        
+        // Añadir estrellas
+        function addStar(x, y, size, brightness) {
+            context.fillStyle = `rgba(255, 255, 255, ${brightness})`;
             
-            // Estrellas más brillantes ocasionalmente
             if (Math.random() < 0.1) {
-                context.fillStyle = `rgba(255, 255, 255, ${brightness})`;
+                // Estrella con destello
                 context.beginPath();
-                context.arc(x, y, size * 2, 0, Math.PI * 2);
+                context.arc(x, y, size * 1.5, 0, Math.PI * 2);
                 context.fill();
                 
-                // Crear cruz de luz para estrellas grandes
-                context.strokeStyle = `rgba(255, 255, 255, ${brightness * 0.5})`;
-                context.lineWidth = 0.5;
+                // Destello en cruz
+                context.strokeStyle = `rgba(255, 255, 255, ${brightness * 0.7})`;
+                context.lineWidth = 0.8;
                 context.beginPath();
-                context.moveTo(x - size * 3, y);
-                context.lineTo(x + size * 3, y);
-                context.moveTo(x, y - size * 3);
-                context.lineTo(x, y + size * 3);
+                context.moveTo(x - size * 4, y);
+                context.lineTo(x + size * 4, y);
+                context.moveTo(x, y - size * 4);
+                context.lineTo(x, y + size * 4);
                 context.stroke();
             } else {
-                context.fillStyle = `rgba(255, 255, 255, ${brightness})`;
-                context.fillRect(x, y, size, size);
+                // Estrella normal
+                context.fillRect(x - size/2, y - size/2, size, size);
             }
         }
         
-        const texture = new THREE.CanvasTexture(canvas);
+        // Generar estrellas
+        const starCount = 5000;
+        for (let i = 0; i < starCount; i++) {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const size = Math.random() * 1.5 + 0.5;
+            const brightness = Math.random() * 0.8 + 0.2; // 0.2 a 1.0
+            
+            addStar(x, y, size, brightness);
+            
+            // Añadir algunas estrellas más pequeñas alrededor para mayor densidad
+            if (Math.random() > 0.7) {
+                const offset = () => (Math.random() - 0.5) * 10;
+                addStar(x + offset(), y + offset(), size * 0.5, brightness * 0.7);
+            }
+        }
         
-        const material = new THREE.MeshBasicMaterial({
+        // Crear textura desde el canvas
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.minFilter = THREE.LinearFilter;
+        texture.magFilter = THREE.LinearFilter;
+        texture.format = THREE.RGBAFormat;
+        
+        // Crear plano de fondo fijo
+        const bgGeometry = new THREE.PlaneGeometry(2, 2);
+        const bgMaterial = new THREE.MeshBasicMaterial({
             map: texture,
-            side: THREE.BackSide
+            depthTest: false,
+            depthWrite: false,
+            transparent: true
         });
         
-        const skybox = new THREE.Mesh(geometry, material);
-        scene.add(skybox);
+        const bgPlane = new THREE.Mesh(bgGeometry, bgMaterial);
+        bgScene.add(bgPlane);
         
-        console.log('✅ Skybox de respaldo creado con nebulosas y estrellas');
+        // Función para renderizar el fondo
+        function renderBackground() {
+            renderer.autoClear = false;
+            renderer.clear();
+            
+            // Renderizar el fondo primero
+            renderer.render(bgScene, bgCamera);
+            
+            // Luego renderizar la escena normal
+            renderer.render(scene, camera);
+        }
+        
+        // Reemplazar la función de renderizado original
+        const originalAnimate = animate;
+        animate = function() {
+            originalAnimate();
+            renderBackground();
+        };
+        
+        console.log('✅ Fondo estrellado fijo creado');
     }
     
     // ============================

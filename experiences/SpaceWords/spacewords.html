@@ -115,48 +115,7 @@
             }
         }
 
-        /* Efecto de humo con pseudo-elementos */
-        .space-text::before,
-        .space-text::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 200%;
-            height: 200%;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0;
-            transition: all 1s ease;
-        }
 
-        .space-text::before {
-            background: radial-gradient(
-                circle,
-                rgba(255, 255, 255, 0.05) 0%,
-                rgba(255, 255, 255, 0.02) 30%,
-                transparent 70%
-            );
-            transform: translate(-50%, -50%) scale(0.5);
-        }
-
-        .space-text::after {
-            background: radial-gradient(
-                circle,
-                rgba(200, 200, 255, 0.03) 0%,
-                rgba(200, 200, 255, 0.01) 40%,
-                transparent 80%
-            );
-            transform: translate(-50%, -50%) scale(0.8);
-            animation-delay: 0.2s;
-        }
-
-        .space-text-appear::before,
-        .space-text-appear::after {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
 
         /* Pulso suave en el texto activo */
         .space-text-appear {
@@ -225,31 +184,6 @@
             pointer-events: none;
         }
 
-        /* Efectos de partículas CSS */
-        .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 50;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px) translateX(0px);
-                opacity: 0;
-            }
-            10%, 90% {
-                opacity: 1;
-            }
-            50% {
-                transform: translateY(-20px) translateX(10px);
-            }
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             .space-text {
@@ -286,32 +220,6 @@
             const loading = document.getElementById('loading');
             const instructions = document.getElementById('instructions');
             
-            // Agregar algunas partículas flotantes
-            function createParticles() {
-                for (let i = 0; i < 20; i++) {
-                    setTimeout(() => {
-                        const particle = document.createElement('div');
-                        particle.className = 'particle';
-                        particle.style.left = Math.random() * window.innerWidth + 'px';
-                        particle.style.top = Math.random() * window.innerHeight + 'px';
-                        particle.style.animationDelay = Math.random() * 6 + 's';
-                        particle.style.animationDuration = (4 + Math.random() * 4) + 's';
-                        
-                        app.appendChild(particle);
-                        
-                        // Remover partícula después de la animación
-                        setTimeout(() => {
-                            if (particle.parentNode) {
-                                particle.parentNode.removeChild(particle);
-                            }
-                        }, 8000);
-                    }, i * 200);
-                }
-                
-                // Recrear partículas cada 10 segundos
-                setTimeout(createParticles, 10000);
-            }
-            
             try {
                 // Inicializar SpaceWords
                 const spaceWords = initSpaceWords(app);
@@ -328,9 +236,6 @@
                 setTimeout(() => {
                     instructions.classList.add('fade-out');
                 }, 8000);
-                
-                // Iniciar partículas
-                createParticles();
                 
                 // Cleanup al salir
                 window.addEventListener('beforeunload', () => {

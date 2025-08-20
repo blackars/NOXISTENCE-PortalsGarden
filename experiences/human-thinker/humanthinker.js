@@ -15,7 +15,7 @@ export default function initWordsRain(opts = {}) {
   container.appendChild(renderer.domElement);
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xffffff);
+  scene.background = new THREE.Color(0x000000);
 
   const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 2000);
   camera.position.set(0, 40, 40);
@@ -27,11 +27,11 @@ export default function initWordsRain(opts = {}) {
   scene.add(dir);
 
   const planeSize = 200;
-  const plane = new THREE.Mesh(new THREE.PlaneGeometry(planeSize, planeSize), new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0, roughness: 1 }));
+  const plane = new THREE.Mesh(new THREE.PlaneGeometry(planeSize, planeSize), new THREE.MeshStandardMaterial({ color: 0x000000, metalness: 0, roughness: 1 }));
   plane.rotation.x = -Math.PI / 2;
   scene.add(plane);
 
-  const grid = new THREE.GridHelper(planeSize, planeSize / 6, 0x000000, 0x000000);
+  const grid = new THREE.GridHelper(planeSize, planeSize / 6, 0xffffff, 0xffffff);
   scene.add(grid);
 
   const loader = new GLTFLoader();
@@ -86,7 +86,7 @@ export default function initWordsRain(opts = {}) {
     const fontSize = Math.floor(60+Math.random()*60);
     ctx.font = `${fontSize}px ${FONT_FAMILIES.join(', ')}`;
     ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillStyle='#000'; ctx.lineWidth=Math.max(2, Math.floor(fontSize*0.06)); ctx.strokeStyle='#000';
+    ctx.fillStyle='#fff'; ctx.lineWidth=Math.max(2, Math.floor(fontSize*0.06)); ctx.strokeStyle='#fff';
     ctx.strokeText(word,256,256); ctx.fillText(word,256,256);
     const tex=new THREE.CanvasTexture(canvas);
     tex.encoding=THREE.sRGBEncoding;
@@ -249,32 +249,6 @@ export default function initWordsRain(opts = {}) {
   scene.add(circle);
   circle.visible = false;
 
-  // Create overlay element
-  const overlay = document.createElement('div');
-  overlay.style.position = 'fixed';
-  overlay.style.top = '0';
-  overlay.style.left = '0';
-  overlay.style.width = '100%';
-  overlay.style.height = '100%';
-  overlay.style.backgroundColor = 'black';
-  overlay.style.opacity = '0';
-  overlay.style.transition = 'opacity 2s ease-in-out';
-  overlay.style.pointerEvents = 'none';
-  overlay.style.zIndex = '1000';
-  document.body.appendChild(overlay);
-
-  // Function to load new experience
-  function loadHumanThinkerExperience() {
-    // Fade to black
-    overlay.style.pointerEvents = 'auto';
-    overlay.style.opacity = '1';
-    
-    // After fade in, load the new experience
-    setTimeout(() => {
-      window.location.href = '/experiences/human-thinker/humanthinker.html';
-    }, 2000);
-  }
-
   // Function to animate the circle expansion
   function animateCircleExpansion() {
     const maxRadius = 1500; // max radius in pixels
@@ -298,8 +272,12 @@ export default function initWordsRain(opts = {}) {
       if (progress < 1) {
         requestAnimationFrame(updateCircle);
       } else {
-        // When animation completes, start loading the new experience
-        loadHumanThinkerExperience();
+        setTimeout(() => {
+          circle.visible = false;
+          // Reset summon state after the effect is complete
+          clickCount = 0;
+          isSummoning = false;
+        }, 1000);
       }
     }
     

@@ -6,35 +6,54 @@
     <title>Deep Space Simulator</title>
     <style>
         body {
-            margin: 0;
-            overflow: hidden;
-            font-family: sans-serif;
+        margin: 0;
+        overflow: hidden;
+        font-family: sans-serif;
+        }
+    @font-face {    
+        font-family: 'Gobold';
+        src: url('/Gobold.otf') format('opentype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+    }
+    .title {
+        position: absolute;
+        top: 40px;
+        left: 40px;
+        font-family: 'Gobold', ui-sans-serif;
+        font-size: clamp(36px, 6vmin, 60px);
+        text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+        white-space: nowrap;
+        color: #ffffff;
+        z-index: 20;
         }
 
         #simulator-container {
-            width: 100vw;
-            height: 100vh;
-            display: block;
+        width: 100vw;
+        height: 100vh;
+        display: block;
         }
 
         /* Opcional: marcador de tiempo */
         #timer {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            color: white;
-            font-size: 1.5em;
-            background: rgba(0,0,0,0.5);
-            padding: 5px 10px;
-            border-radius: 8px;
-            z-index: 10;
+        position: absolute;
+        bottom: 40px;
+        left: 40px;
+        color: white;
+        font-size: 1.5em;
+        text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+        font-family: 'Gobold', ui-sans-serif;
+        background: transparent;
+        padding: 5px 10px;
+        z-index: 10;
         }
     </style>
 </head>
 <body>
     <div id="simulator-container"></div>
-    <div id="timer">Tiempo: 0s</div>
-
+    <div class="title">Deep Space Encounter</div>
+    <div id="timer">0</div>
     <script type="module">
         import { DeepSpaceSimulator } from './deepspace.js';
 
@@ -43,10 +62,21 @@
         // Actualización del contador visual de tiempo
         const timerEl = document.getElementById('timer');
         function updateTimer() {
-            timerEl.textContent = `Tiempo: ${Math.floor(simulator.elapsedTime)}s`;
+            timerEl.textContent = `Time: ${Math.floor(simulator.elapsedTime)}`;
             requestAnimationFrame(updateTimer);
         }
         updateTimer();
     </script>
+        <div id="music"></div>
+
+        <script type="module">
+            import createBgMusic from "/bgmusic.js";
+        
+            createBgMusic("music", {
+            position: "top-right",
+            color: "#ffffff",
+            src: "/sounds/ambient.mp3"
+            });
+        </script>
 </body>
 </html>

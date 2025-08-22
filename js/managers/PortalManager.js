@@ -79,7 +79,7 @@ export class PortalManager {
 
     createSphereEffect(config) {
         // Crear la esfera de efecto
-        const sphereGeometry = new THREE.SphereGeometry(1.2, 32, 32);
+        const sphereGeometry = new THREE.SphereGeometry(1.5, 32, 32);
         const sphereMaterial = new THREE.MeshBasicMaterial({
             color: 0x000000,
             transparent: true,

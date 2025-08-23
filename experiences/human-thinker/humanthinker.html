@@ -57,12 +57,49 @@
         z-index: 20;
         padding: 0 20px;
         pointer-events: none;
-        }
+    }
+
+    /* Speech Bubble Styles */
+    .speech-bubble {
+      position: fixed;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 80%;
+      min-width: 300px;
+      font-family: 'Arial', sans-serif;
+      font-size: 18px;
+      
+      line-height: 1.5;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      z-index: 100;
+      background: rgba(103, 103, 103, 0);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: none;
+      padding: 20px 25px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      color: #ffffff;
+      border: none;
+      pointer-events: none;
+    }
+
+    .speech-bubble.visible {
+      opacity: 1;
+    }
+
+    /* Removed the arrow */
+
   </style>
 </head>
 <body>
   <div id="app"></div>
   <div class="title">Human Thinker</div>
+  <div class="speech-bubble" id="speechBubble">
+    <div id="speechText"></div>
+  </div>
   <!-- Cargar el componente como módulo local -->
   <script type="module">
     import initWordsRain from './humanthinker.js';

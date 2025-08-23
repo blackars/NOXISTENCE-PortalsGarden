@@ -126,14 +126,8 @@ export function initSpaceWords(container) {
             skybox.scale.set(100, 100, 100);
             scene.add(skybox);
             
-            console.log('✅ Skybox cargado correctamente');
-        },
-        (progress) => {
-            console.log('Cargando skybox...', (progress.loaded / progress.total * 100) + '%');
         },
         (error) => {
-            console.error('❌ Error cargando skybox:', error);
-            
             // Crear un skybox de respaldo
             createFallbackSkybox();
         }
@@ -263,7 +257,6 @@ export function initSpaceWords(container) {
             renderBackground();
         };
         
-        console.log('✅ Fondo estrellado fijo creado');
     }
     
     // ============================
@@ -357,8 +350,8 @@ export function initSpaceWords(container) {
                 phrase.element.style.display = 'none';
                 phrase.element.classList.remove('space-text-disappear');
                 phrase.active = false;
-            }, 1000);
-        }, 4000);
+            }, 1500); // Tiempo de animación de desaparición
+        }, 6000); // Tiempo que el texto permanece visible
     }
     
     // ============================

@@ -3,13 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpaceWords - Experiencia Inmersiva</title>
+    <title>SpaceWords</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
         body {
             overflow: hidden;
@@ -17,24 +12,54 @@
             background: #000;
             user-select: none;
         }
+        
+        @font-face {
+            font-family: 'Gobold';
+            src: url('/fonts/Gobold.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Nightcore';
+            src: url('/fonts/ArchitectsDaughter.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
 
         #app {
             position: relative;
             width: 100vw;
             height: 100vh;
         }
-
         canvas {
             display: block;
             outline: none;
         }
 
+        .title {
+            position: absolute;
+            top: 40px;
+            left: 40px;
+            text-align: center;
+            font-family: 'Gobold', ui-sans-serif;
+            font-size: clamp(36px, 6vmin, 60px);
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+            white-space: nowrap;
+            color: #ffffff;
+            z-index: 20;
+            padding: 0 20px;
+            pointer-events: none;
+        }
+
         /* ============================
-           ESTILOS PARA TEXTO ESPACIAL
+            ESTILOS PARA TEXTO ESPACIAL
            ============================ */
         .space-text {
             position: absolute;
             color: #fff;
+            font-family: 'Nightcore', ui-sans-serif;
             font-size: clamp(16px, 2.5vw, 24px);
             font-weight: 300;
             text-align: center;
@@ -115,13 +140,11 @@
             }
         }
 
-
-
         /* Pulso suave en el texto activo */
         .space-text-appear {
-            animation: smokeAppear 1.5s cubic-bezier(0.23, 1, 0.32, 1) forwards,
-                       gentlePulse 3s ease-in-out 1.5s infinite;
-        }
+        animation: smokeAppear 1.5s cubic-bezier(0.23, 1, 0.32, 1) forwards,
+                    gentlePulse 3s ease-in-out 1.5s infinite;
+    }
 
         @keyframes gentlePulse {
             0%, 100% {
@@ -137,105 +160,24 @@
                     0 0 35px rgba(255, 255, 255, 0.3);
             }
         }
-
-        /* Indicador de carga */
-        .loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #fff;
-            font-size: 18px;
-            z-index: 200;
-            text-align: center;
-        }
-
-        .loading::after {
-            content: '';
-            animation: loadingDots 1.5s infinite;
-        }
-
-        @keyframes loadingDots {
-            0%, 20% { content: ''; }
-            40% { content: '.'; }
-            60% { content: '..'; }
-            80%, 100% { content: '...'; }
-        }
-
-        /* Instrucciones */
-        .instructions {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 14px;
-            text-align: center;
-            z-index: 150;
-            transition: opacity 0.3s ease;
-        }
-
-        .instructions p {
-            margin: 5px 0;
-        }
-
-        .instructions.fade-out {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .space-text {
-                font-size: clamp(14px, 4vw, 20px);
-                max-width: 250px;
-            }
-            
-            .instructions {
-                font-size: 12px;
-                bottom: 20px;
-                padding: 0 20px;
-            }
-        }
     </style>
 </head>
 <body>
     <div id="app">
-        <div class="loading" id="loading">
-            Cargando experiencia espacial
-        </div>
-        
-        <div class="instructions" id="instructions">
-            <p><strong>Arrastra</strong> para mirar alrededor</p>
-            <p><strong>Rueda del mouse</strong> para zoom</p>
-            <p><strong>Click</strong> cuando veas texto brillando</p>
-        </div>
+
+
     </div>
+    <div class="title">Space Words</div>
 
     <script type="module">
         import { initSpaceWords } from './spacewords.js';
         
         document.addEventListener('DOMContentLoaded', function() {
             const app = document.getElementById('app');
-            const loading = document.getElementById('loading');
-            const instructions = document.getElementById('instructions');
             
             try {
                 // Inicializar SpaceWords
                 const spaceWords = initSpaceWords(app);
-                
-                // Ocultar loading después de un momento
-                setTimeout(() => {
-                    loading.style.opacity = '0';
-                    setTimeout(() => {
-                        loading.style.display = 'none';
-                    }, 500);
-                }, 2000);
-                
-                // Ocultar instrucciones después de un tiempo
-                setTimeout(() => {
-                    instructions.classList.add('fade-out');
-                }, 8000);
                 
                 // Cleanup al salir
                 window.addEventListener('beforeunload', () => {
@@ -244,13 +186,18 @@
                     }
                 });
                 
-                console.log('✅ SpaceWords inicializado correctamente');
-                
             } catch (error) {
-                console.error('❌ Error inicializando SpaceWords:', error);
-                loading.innerHTML = 'Error cargando la experiencia';
-                loading.style.color = '#ff6b6b';
+                document.body.appendChild(errorDiv);
             }
+        });
+    </script>
+    <div id="music"></div>
+    <script type="module">
+        import createBgMusic from "/bgmusic.js";
+        createBgMusic("music", {
+        position: "top-right",
+        color: "#ffffff",
+        src: "/sounds/ambient.mp3"
         });
     </script>
 </body>

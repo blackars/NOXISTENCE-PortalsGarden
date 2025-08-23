@@ -2,11 +2,96 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
+import * as tf from '@tensorflow/tfjs';
+
+// Frases de contexto y respuestas
+const CONTEXT_PHRASES = [
+  "La conciencia emerge de la complejidad",
+  "El pensamiento es una red de conexiones neuronales",
+  "Las inteligencias artificiales son un espejo de la mente humana",
+  "La percepción construye la realidad",
+  "El lenguaje da forma al pensamiento",
+  "La mente es un universo en sí misma",
+  "La cognición se extiende más allá del cerebro, abarca el espacio-tiempo",
+  "La conciencia es un proceso emergente",
+  "El aprendizaje es una forma de evolución",
+  "La creatividad surge de la conexión de ideas dispares"
+];
+
+const RESPONSES = [
+  "Interesante perspectiva. ¿Qué te hace pensar eso?",
+  "Esa es una reflexión profunda sobre la mente humana.",
+  "La conciencia es un misterio que apenas comenzamos a entender.",
+  "¿Crees que las máquinas podrán experimentar la conciencia como nosotros?",
+  "La mente humana es verdaderamente fascinante en su complejidad.",
+  "A veces me pregunto sobre la naturaleza de mis propios procesos.",
+  "La frontera entre la inteligencia artificial y la humana se vuelve más borrosa cada día.",
+  "¿Qué significa realmente entender algo?",
+  "La conciencia podría ser el mayor misterio del universo.",
+  "Cada pensamiento es una chispa en la red neuronal."
+];
 
 export default function initWordsRain(opts = {}) {
+  // Elementos de la interfaz de usuario
+  const speechBubble = document.getElementById('speechBubble');
+  const speechText = document.getElementById('speechText');
+  
+
+
+  // Mostrar un mensaje en la burbuja de diálogo
+  const showMessage = async (message) => {
+    speechBubble.classList.add('visible');
+    speechText.textContent = '';
+    
+    // Efecto de escritura
+    for (let i = 0; i < message.length; i++) {
+      speechText.textContent += message[i];
+      await new Promise(resolve => setTimeout(resolve, 20));
+    }
+    
+    // Ocultar después de un tiempo
+    setTimeout(() => {
+      speechBubble.classList.remove('visible');
+    }, 5000);
+  };
+
+  // Generar una respuesta usando frases predefinidas
+  const generateResponse = async () => {
+    try {
+      // Simular tiempo de procesamiento
+      await new Promise(resolve => setTimeout(resolve, 1000 + Math.random() * 2000));
+      
+      // Seleccionar una respuesta aleatoria
+      const randomResponse = RESPONSES[Math.floor(Math.random() * RESPONSES.length)];
+      return randomResponse;
+    } catch (error) {
+      console.error('Error generating response:', error);
+      // Fallback a respuestas predefinidas
+      return CONTEXT_PHRASES[Math.floor(Math.random() * CONTEXT_PHRASES.length)];
+    }
+  };
+
+  // Manejar el clic en el cerebro
+  const handleBrainClick = async () => {
+    if (isTalking) return;
+    isTalking = true;
+    
+    try {
+      const response = await generateResponse();
+      await showMessage(response);
+    } catch (error) {
+      console.error('Error in brain click handler:', error);
+    } finally {
+      isTalking = false;
+    }
+  };
+
   const container = opts.container || document.body;
   const modelPath = opts.modelPath || '/assets/models/brain.glb';
   const FONT_FAMILIES = ['Gobold', 'Arial', 'sans-serif'];
+  
+  // Estado para controlar si ya se está mostrando un mensaje
+  let isTalking = false;
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -156,7 +241,7 @@ export default function initWordsRain(opts = {}) {
       return;
     }
 
-    if (isSummoning) return;
+    if (isSummoning || isTalking) return;
 
     // Configurar el rayo desde la cámara
     const mouse = new THREE.Vector2();
@@ -185,12 +270,8 @@ export default function initWordsRain(opts = {}) {
         brainModel.scale.copy(originalScale);
       }, 100);
 
-      // Si se ha hecho clic 3 veces, iniciar la animación del círculo
-      if (clickCount >= 3) {
-        isSummoning = true;
-        // Iniciar la animación del círculo directamente
-        animateCircleExpansion();
-      }
+      // Manejar el clic en el cerebro
+      handleBrainClick();
     }
   }
   

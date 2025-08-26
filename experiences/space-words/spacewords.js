@@ -75,31 +75,31 @@ export function initSpaceWords(container) {
     // ============================
     const phrases = [
         {
-            text: "And the sun saw heaven again",
+            text: "NOXISTENCE, before nonexistence, is a constant reverie.",
             position: new THREE.Vector3(50, 20, 30), // Posición en la esfera
             element: null,
             active: false
         },
         {
-            text: "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+            text: "Here there are no laws, only temporary conditions for the impossible to manifest.",
             position: new THREE.Vector3(-40, 35, 25),
             element: null,
             active: false
         },
         {
-            text: "Ut enim ad minim veniam, quis nostrud exercitation ullamco.",
+            text: "Is there something like consciousness? Does it truly observe?",
             position: new THREE.Vector3(30, -45, -20),
             element: null,
             active: false
         },
         {
-            text: "Duis aute irure dolor in reprehenderit in voluptate velit esse.",
+            text: "No one is a prophet in their own land, and I was not one (nor ever will be) even in my own time.",
             position: new THREE.Vector3(-35, -25, 40),
             element: null,
             active: false
         },
         {
-            text: "Excepteur sint occaecat cupidatat non proident, sunt in culpa.",
+            text: "I could never be more than poetry clinging to nonexistence.",
             position: new THREE.Vector3(15, 40, -35),
             element: null,
             active: false

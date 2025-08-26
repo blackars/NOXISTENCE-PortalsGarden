@@ -13,10 +13,33 @@
       font-family: Arial, sans-serif;
     }
     @font-face {
-  font-family: 'NumberOne';
-  src: url('public/numberone.woff2') format('woff2'),
-       url('public/numberone.woff') format('woff');
-  font-weight: 100;
+  font-family: 'Gobold';
+  src: url('/fonts/Gobold.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Kitisakkullian';
+  src: url('/fonts/Kitisakkullian.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'AlienLines';
+  src: url('/fonts/AlienLines.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'AlienHieroglyph';
+  src: url('/fonts/AlienHieroglyph.ttf') format('truetype');
+  font-weight: normal;
   font-style: normal;
   font-display: swap;
 }
@@ -34,16 +57,7 @@
     .lock-cursor { 
       cursor: none; 
     }
-    #hint { 
-      position: absolute; 
-      left: 8px; 
-      bottom: 8px; 
-      color: #222; 
-      font-family: Arial, sans-serif; 
-      font-size: 12px; 
-      opacity: 0.0; 
-      pointer-events: none; 
-    }
+
     .title {
         position: absolute;
         top: 40px;

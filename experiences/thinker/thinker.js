@@ -6,7 +6,7 @@ import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockCont
 export default function initWordsRain(opts = {}) {
   const container = opts.container || document.body;
   const modelPath = opts.modelPath || '/assets/models/brain.glb';
-  const FONT_FAMILIES = ['AlienLines', 'Arial', 'sans-serif'];
+  const FONT_FAMILIES = ['AlienLines', 'Kitisakkullian', 'AlienHieroglyph'];
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -72,11 +72,11 @@ export default function initWordsRain(opts = {}) {
   const activeSprites = [];
   const WORDS = ["memory","shdadow","NOX","hidden","void","arca","echo","lumen","axis",
     "pulse","sigil","inexistence", "will", "paradox", "ontological", "ephemeral", 
-    "fluctuations", "transmedia", "ritual", "limina", "hallucination", "reverie", 
+    "fluctuations", "transmedia", "ritual", "liminal", "hallucination", "reverie", 
     "vestiges", "codex", "bestiary", "fragments", "shadows", "glitch", "symmetry", 
     "void", "mutations", "maxkodia", "anothearth", "deepspace", "portals", "geometries",
     "grids", "asteroids", "moons", "garden", "planes","⟟⟠⟡","⨀⨂⨁",
-    "✶✷✸","𐍈𐍉𐍊","شعاع","נופל","жизнь","外来","⊗⊕⊘"];
+    "✶✷✸","𐍈𐍉𐍊","⊗⊕⊘"];
 
   let emissionRate = 25, emitAccumulator = 0;
 

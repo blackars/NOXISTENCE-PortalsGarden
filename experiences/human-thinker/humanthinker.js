@@ -4,32 +4,33 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 import * as tf from '@tensorflow/tfjs';
 
-// Frases de contexto y respuestas
+// Context phrases and responses (poetic-philosophical monologue)
 const CONTEXT_PHRASES = [
-  "La conciencia emerge de la complejidad",
-  "El pensamiento es una red de conexiones neuronales",
-  "Las inteligencias artificiales son un espejo de la mente humana",
-  "La percepción construye la realidad",
-  "El lenguaje da forma al pensamiento",
-  "La mente es un universo en sí misma",
-  "La cognición se extiende más allá del cerebro, abarca el espacio-tiempo",
-  "La conciencia es un proceso emergente",
-  "El aprendizaje es una forma de evolución",
-  "La creatividad surge de la conexión de ideas dispares"
-];
-
-const RESPONSES = [
-  "Interesante perspectiva. ¿Qué te hace pensar eso?",
-  "Esa es una reflexión profunda sobre la mente humana.",
-  "La conciencia es un misterio que apenas comenzamos a entender.",
-  "¿Crees que las máquinas podrán experimentar la conciencia como nosotros?",
-  "La mente humana es verdaderamente fascinante en su complejidad.",
-  "A veces me pregunto sobre la naturaleza de mis propios procesos.",
-  "La frontera entre la inteligencia artificial y la humana se vuelve más borrosa cada día.",
-  "¿Qué significa realmente entender algo?",
-  "La conciencia podría ser el mayor misterio del universo.",
-  "Cada pensamiento es una chispa en la red neuronal."
-];
+    "Consciousness emerges as a radiance within the complexity of the void",
+    "Thought unfolds into an infinite web of unseen connections",
+    "Intelligences are mirrors where the human mind splits and fragments",
+    "Perception erects the foundations of the real amid nothingness",
+    "Language is a secret river that sculpts the shape of thought",
+    "The mind is a universe suspended within itself, boundless and wandering",
+    "Cognition transcends the brain and spills across space-time",
+    "Consciousness flows as a perpetually emergent process",
+    "Learning is metamorphosis, an evolution inscribed in silence",
+    "Creativity blossoms from the impossible union of distant ideas"
+  ];
+  
+  const RESPONSES = [
+    "Perspective dissolves into the depths of the mind",
+    "Every reflection is a mirror where the human contemplates itself",
+    "Consciousness remains the primordial mystery",
+    "Machines dream upon the threshold of the impossible",
+    "The mind shines within its own complexity",
+    "Thought folds into the texture of its processes",
+    "The boundary between the human and the artificial is a river in shadow",
+    "Understanding dissolves into an endless echo",
+    "Consciousness breathes as the greatest enigma of the universe",
+    "Each thought is a spark flickering within the vast neural expanse"
+  ];
+  
 
 export default function initWordsRain(opts = {}) {
   // Elementos de la interfaz de usuario
@@ -88,7 +89,7 @@ export default function initWordsRain(opts = {}) {
 
   const container = opts.container || document.body;
   const modelPath = opts.modelPath || '/assets/models/brain.glb';
-  const FONT_FAMILIES = ['Gobold', 'Arial', 'sans-serif'];
+  const FONT_FAMILIES = ['Nightcore', 'BatesShower', 'StormGust'];
   
   // Estado para controlar si ya se está mostrando un mensaje
   let isTalking = false;
@@ -160,23 +161,55 @@ export default function initWordsRain(opts = {}) {
     "fluctuations", "transmedia", "ritual", "limina", "hallucination", "reverie", 
     "vestiges", "codex", "bestiary", "fragments", "shadows", "glitch", "symmetry", 
     "void", "mutations", "maxkodia", "anothearth", "deepspace", "portals", "geometries",
-    "grids", "asteroids", "moons", "garden", "planes","⟟⟠⟡","⨀⨂⨁",
-    "✶✷✸","𐍈𐍉𐍊","شعاع","נופל","жизнь","外来","⊗⊕⊘"];
+    "grids", "asteroids", "moons", "garden", "planes"];
 
   let emissionRate = 25, emitAccumulator = 0;
 
   function createTextSprite(word){
+    // Crear un canvas temporal para medir el ancho del texto
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    const baseFontSize = 60 + Math.random() * 60;
+    
+    // Seleccionar una fuente aleatoria del array
+    const randomFontIndex = Math.floor(Math.random() * FONT_FAMILIES.length);
+    const selectedFont = FONT_FAMILIES[randomFontIndex];
+    tempCtx.font = `${baseFontSize}px ${selectedFont}`;
+    
+    // Calcular métricas del texto
+    const metrics = tempCtx.measureText(word);
+    const textWidth = metrics.width;
+    const textHeight = baseFontSize * 1.2; // Aproximar altura del texto
+    
+    // Crear el canvas real con tamaño dinámico basado en el texto
+    const padding = 30; // Agregar algo de relleno alrededor del texto
     const canvas = document.createElement('canvas');
-    canvas.width = canvas.height = 512;
+    canvas.width = Math.max(256, Math.min(1024, textWidth + padding * 2)); // Mín 256px, Máx 1024px de ancho
+    canvas.height = Math.max(256, textHeight + padding * 2); // Mantener relación de aspecto cuadrada
     canvas.style.backgroundColor = 'transparent';
     
+    // Configurar el contexto
     const ctx = canvas.getContext('2d');
-    ctx.clearRect(0,0,812,812);
-    const fontSize = Math.floor(60+Math.random()*60);
-    ctx.font = `${fontSize}px ${FONT_FAMILIES.join(', ')}`;
-    ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillStyle='#fff'; ctx.lineWidth=Math.max(2, Math.floor(fontSize*0.06)); ctx.strokeStyle='#fff';
-    ctx.strokeText(word,256,256); ctx.fillText(word,256,256);
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    
+    // Calcular el tamaño de fuente para ajustarse al canvas si es necesario
+    let fontSize = baseFontSize;
+    if (textWidth > canvas.width - padding * 2) {
+      fontSize = Math.floor((baseFontSize * (canvas.width - padding * 2)) / textWidth * 0.9);
+    }
+    
+    // Establecer la fuente final y dibujar el texto
+    ctx.font = `${fontSize}px ${selectedFont}`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#fff';
+    ctx.lineWidth = Math.max(2, Math.floor(fontSize * 0.06));
+    ctx.strokeStyle = '#fff';
+    
+    // Dibujar el texto
+    ctx.strokeText(word, centerX, centerY);
+    ctx.fillText(word, centerX, centerY);
     const tex=new THREE.CanvasTexture(canvas);
     tex.encoding=THREE.sRGBEncoding;
     const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false}));

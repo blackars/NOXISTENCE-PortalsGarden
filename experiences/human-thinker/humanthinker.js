@@ -155,8 +155,12 @@ export default function initWordsRain(opts = {}) {
   loadModel();
 
   const activeSprites = [];
-  const WORDS = ["memoria","sombra","no-x","oculto","void","arca","nox","ánima","vínculo",
-    "echo","lumen","axis","pulse","sigil","códice","árbol","fénix","límite","⟟⟠⟡","⨀⨂⨁",
+  const WORDS = ["memory","shdadow","NOX","hidden","void","arca","echo","lumen","axis",
+    "pulse","sigil","inexistence", "will", "paradox", "ontological", "ephemeral", 
+    "fluctuations", "transmedia", "ritual", "limina", "hallucination", "reverie", 
+    "vestiges", "codex", "bestiary", "fragments", "shadows", "glitch", "symmetry", 
+    "void", "mutations", "maxkodia", "anothearth", "deepspace", "portals", "geometries",
+    "grids", "asteroids", "moons", "garden", "planes","⟟⟠⟡","⨀⨂⨁",
     "✶✷✸","𐍈𐍉𐍊","شعاع","נופל","жизнь","外来","⊗⊕⊘"];
 
   let emissionRate = 25, emitAccumulator = 0;

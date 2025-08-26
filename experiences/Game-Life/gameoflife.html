@@ -154,5 +154,16 @@
     import { initGameofLife } from './gameoflife.js';
     initGameofLife(document.getElementById('app'));
   </script>
+  <div id="music"></div>
+
+        <script type="module">
+            import createBgMusic from "/bgmusic.js";
+        
+            createBgMusic("music", {
+            position: "top-right",
+            color: "#ffffff",
+            src: "/sounds/ambient.mp3"
+            });
+        </script>
 </body>
 </html>

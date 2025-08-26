@@ -6,7 +6,7 @@ import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockCont
 export default function initWordsRain(opts = {}) {
   const container = opts.container || document.body;
   const modelPath = opts.modelPath || '/assets/models/brain.glb';
-  const FONT_FAMILIES = ['Gobold', 'Arial', 'sans-serif'];
+  const FONT_FAMILIES = ['AlienLines', 'Arial', 'sans-serif'];
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
@@ -70,24 +70,60 @@ export default function initWordsRain(opts = {}) {
   loadModel();
 
   const activeSprites = [];
-  const WORDS = ["memoria","sombra","no-x","oculto","void","arca","nox","ánima","vínculo",
-    "echo","lumen","axis","pulse","sigil","códice","árbol","fénix","límite","⟟⟠⟡","⨀⨂⨁",
+  const WORDS = ["memory","shdadow","NOX","hidden","void","arca","echo","lumen","axis",
+    "pulse","sigil","inexistence", "will", "paradox", "ontological", "ephemeral", 
+    "fluctuations", "transmedia", "ritual", "limina", "hallucination", "reverie", 
+    "vestiges", "codex", "bestiary", "fragments", "shadows", "glitch", "symmetry", 
+    "void", "mutations", "maxkodia", "anothearth", "deepspace", "portals", "geometries",
+    "grids", "asteroids", "moons", "garden", "planes","⟟⟠⟡","⨀⨂⨁",
     "✶✷✸","𐍈𐍉𐍊","شعاع","נופל","жизнь","外来","⊗⊕⊘"];
 
   let emissionRate = 25, emitAccumulator = 0;
 
   function createTextSprite(word){
+    // Create a temporary canvas to measure text width
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    const baseFontSize = 60 + Math.random() * 60;
+    // Seleccionar una fuente aleatoria del array
+    const randomFontIndex = Math.floor(Math.random() * FONT_FAMILIES.length);
+    const selectedFont = FONT_FAMILIES[randomFontIndex];
+    tempCtx.font = `${baseFontSize}px ${selectedFont}`;
+    
+    // Calculate text metrics
+    const metrics = tempCtx.measureText(word);
+    const textWidth = metrics.width;
+    const textHeight = baseFontSize * 1.2; // Approximate text height
+    
+    // Create actual canvas with dynamic size based on text
+    const padding = 30; // Add some padding around the text
     const canvas = document.createElement('canvas');
-    canvas.width = canvas.height = 512;
+    canvas.width = Math.max(256, Math.min(1024, textWidth + padding * 2)); // Min 256px, Max 1024px width
+    canvas.height = Math.max(256, textHeight + padding * 2); // Keep square aspect ratio
     canvas.style.backgroundColor = 'transparent';
     
+    // Set up the context
     const ctx = canvas.getContext('2d');
-    ctx.clearRect(0,0,812,812);
-    const fontSize = Math.floor(60+Math.random()*60);
-    ctx.font = `${fontSize}px ${FONT_FAMILIES.join(', ')}`;
-    ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillStyle='#000'; ctx.lineWidth=Math.max(2, Math.floor(fontSize*0.06)); ctx.strokeStyle='#000';
-    ctx.strokeText(word,256,256); ctx.fillText(word,256,256);
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    
+    // Calculate font size to fit the canvas if needed
+    let fontSize = baseFontSize;
+    if (textWidth > canvas.width - padding * 2) {
+      fontSize = Math.floor((baseFontSize * (canvas.width - padding * 2)) / textWidth * 0.9);
+    }
+    
+    // Set the final font and draw the text
+    ctx.font = `${fontSize}px ${selectedFont}`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#000';
+    ctx.lineWidth = Math.max(2, Math.floor(fontSize * 0.06));
+    ctx.strokeStyle = '#000';
+    
+    // Draw the text
+    ctx.strokeText(word, centerX, centerY);
+    ctx.fillText(word, centerX, centerY);
     const tex=new THREE.CanvasTexture(canvas);
     tex.encoding=THREE.sRGBEncoding;
     const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false}));

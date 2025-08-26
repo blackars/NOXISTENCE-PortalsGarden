@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Words Storm    </title>
+  <title>Human Thinker</title>
 
   <style>
     html, body { 
@@ -109,5 +109,16 @@
       modelPath: '/assets/models/brain.glb'
     });
   </script>
+  <div id="music"></div>
+
+        <script type="module">
+            import createBgMusic from "/bgmusic.js";
+        
+            createBgMusic("music", {
+            position: "top-right",
+            color: "#ffffff",
+            src: "/sounds/ambient.mp3"
+            });
+        </script>
 </body>
 </html>

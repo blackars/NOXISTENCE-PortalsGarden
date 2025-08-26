@@ -70,7 +70,7 @@
       top: 100px;
       left: 40px;
       width: 80%;
-      max-width: 300px;
+      max-width: 400px;
       background: transparent;
       color: white;
       padding: 20px 0 0 0;
@@ -150,8 +150,7 @@
   <div class="title">AnothEarth</div>
 
   <div id="planetInfo" class="planet-info">
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>AnothEarth is Earth—and yet it is not. It is her in essence, but transformed into a fantastic reflection: a parallel world where fantasy intertwines with a unique form of magical realism, born of its own nature. Strange, distant, foreign to your reality… and yet profoundly familiar, as though you had always known it.</p>
     <a href="#" id="landingButton" class="landing-button">Landing</a>
   </div>
 
@@ -176,6 +175,16 @@
   </script>
 
   <!-- Tu módulo Three.js -->
-  <script type="module" src="/experiences/AnothEarth/anothearth.js"></script>
+  <script type="module" src="/experiences/anothearth/anothearth.js"></script>
+  <div id="music"></div>
+        <script type="module">
+            import createBgMusic from "/bgmusic.js";
+        
+            createBgMusic("music", {
+            position: "top-right",
+            color: "#ffffff",
+            src: "/sounds/ambient.mp3"
+            });
+        </script>
 </body>
 </html>

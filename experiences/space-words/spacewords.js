@@ -7,10 +7,26 @@ export function initSpaceWords(container) {
     // ============================
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({ 
+        antialias: true,
+        alpha: false,
+        powerPreference: 'high-performance'
+    });
     
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    // Asegurar que el renderer ocupe todo el espacio sin márgenes
+    renderer.setSize(window.innerWidth, window.innerHeight, false);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.domElement.style.display = 'block';
+    renderer.domElement.style.margin = '0';
+    renderer.domElement.style.padding = '0';
+    renderer.domElement.style.position = 'fixed';
+    renderer.domElement.style.top = '0';
+    renderer.domElement.style.left = '0';
+    renderer.domElement.style.outline = 'none';
+    
+    container.style.margin = '0';
+    container.style.padding = '0';
+    container.style.overflow = 'hidden';
     container.appendChild(renderer.domElement);
     
     // Cámara siempre en el centro

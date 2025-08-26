@@ -70,7 +70,7 @@
       top: 100px;
       left: 40px;
       width: 80%;
-      max-width: 300px;
+      max-width: 400px;
       background: transparent;
       color: white;
       padding: 20px 0 0 0;
@@ -150,8 +150,9 @@
   <div class="title">Maxkodia Planet</div>
 
   <div id="planetInfo" class="planet-info">
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p>Maxkodia is a predominantly solid giant, its surface tinted in reddish and brown tones and covered by lush vegetation with broad leaves that shift between shades of green, blue, and orange. The planet harbors a rich diversity of lifeforms, where convergent evolution has given rise to numerous creatures distinguished by their multiplicity of eyes.</p>
+    <p>This world orbits within a binary system: two stars that bathe the planet in shifting light—at times blue, at others red—radically transforming its landscapes. Maxkodia is accompanied by eight moons, each comparable in size to Earth, along with a wide array of smaller celestial bodies.</p>
+    <p>Within its biodiversity dwell several intelligent species still in primitive stages of development. Yet upon one of its moons lies an advanced civilization, observing closely the flourishing life on Maxkodia and even venturing to experiment with some of its creatures.</p>
     <a href="#" id="landingButton" class="landing-button">Landing</a>
   </div>
 
@@ -177,5 +178,16 @@
 
   <!-- Tu módulo Three.js -->
   <script type="module" src="/experiences/MaxkodiaPlanet/maxkodiaplanet.js"></script>
+  <div id="music"></div>
+
+        <script type="module">
+            import createBgMusic from "/bgmusic.js";
+        
+            createBgMusic("music", {
+            position: "top-right",
+            color: "#ffffff",
+            src: "/sounds/ambient.mp3"
+            });
+        </script>
 </body>
 </html>

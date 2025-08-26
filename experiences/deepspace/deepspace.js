@@ -61,11 +61,77 @@ export class DeepSpaceSimulator {
     }
 
     loadBackground() {
-        const loader = new THREE.TextureLoader();
-        loader.load('/nebulosa.jpg', (texture) => {
-            texture.minFilter = THREE.LinearFilter;
-            this.scene.background = texture;
+        const loader = new GLTFLoader();
+        loader.load(
+            '/assets/models/skybox.glb',
+            (gltf) => {
+                const skybox = gltf.scene;
+                
+                // Aplicar material BackSide a todos los meshes
+                skybox.traverse((child) => {
+                    if (child.isMesh) {
+                        if (Array.isArray(child.material)) {
+                            child.material.forEach(mat => {
+                                mat.side = THREE.BackSide;
+                            });
+                        } else {
+                            child.material.side = THREE.BackSide;
+                        }
+                    }
+                });
+                
+                // Escalar el skybox para que sea lo suficientemente grande
+                skybox.scale.set(500, 500, 500);
+                this.scene.add(skybox);
+            },
+            undefined,
+            (error) => {
+                console.error('Error loading skybox, using fallback:', error);
+                this.createFallbackSkybox();
+            }
+        );
+    }
+
+    createFallbackSkybox() {
+        // Crear una esfera grande como skybox de respaldo
+        const geometry = new THREE.SphereGeometry(500, 32, 32);
+        
+        // Crear material con textura estrellada
+        const canvas = document.createElement('canvas');
+        canvas.width = 2048;
+        canvas.height = 1024;
+        const context = canvas.getContext('2d');
+        
+        // Fondo espacial oscuro
+        const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
+        gradient.addColorStop(0, '#000000');
+        gradient.addColorStop(1, '#000033');
+        context.fillStyle = gradient;
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Añadir estrellas
+        for (let i = 0; i < 2000; i++) {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const size = Math.random() * 1.5;
+            const brightness = 0.2 + Math.random() * 0.8;
+            
+            context.fillStyle = `rgba(255, 255, 255, ${brightness})`;
+            context.beginPath();
+            context.arc(x, y, size, 0, Math.PI * 2);
+            context.fill();
+        }
+        
+        // Crear textura desde el canvas
+        const texture = new THREE.CanvasTexture(canvas);
+        const material = new THREE.MeshBasicMaterial({
+            map: texture,
+            side: THREE.BackSide
         });
+        
+        // Crear skybox
+        const skybox = new THREE.Mesh(geometry, material);
+        this.scene.add(skybox);
     }
 
     loadShip() {

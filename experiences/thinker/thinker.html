@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Words Storm    </title>
+  <title>Gardhan Thinker</title>
 
   <style>
     html, body { 
@@ -62,7 +62,7 @@
 </head>
 <body>
   <div id="app"></div>
-  <div class="title">Thinker</div>
+  <div class="title">Gardhan Thinker</div>
   <!-- Cargar el componente como módulo local -->
   <script type="module">
     import initWordsRain from './thinker.js';
@@ -72,5 +72,16 @@
       modelPath: '/assets/models/brain.glb'
     });
   </script>
+  <div id="music"></div>
+
+        <script type="module">
+            import createBgMusic from "/bgmusic.js";
+        
+            createBgMusic("music", {
+            position: "top-right",
+            color: "#ffffff",
+            src: "/sounds/ambient.mp3"
+            });
+        </script>
 </body>
 </html>

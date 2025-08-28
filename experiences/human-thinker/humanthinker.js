@@ -88,7 +88,7 @@ export default function initWordsRain(opts = {}) {
   };
 
   const container = opts.container || document.body;
-  const modelPath = opts.modelPath || '/assets/models/brain.glb';
+  const modelPath = opts.modelPath || '/assets/models/humanbrain.glb';
   const FONT_FAMILIES = ['Nightcore', 'BatesShower', 'StormGust'];
   
   // Estado para controlar si ya se está mostrando un mensaje

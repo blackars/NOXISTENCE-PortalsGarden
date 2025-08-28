@@ -149,6 +149,8 @@ export class DeepSpaceSimulator {
             loader.load('/assets/models/ship.glb', (gltf) => {
                 this.ship = gltf.scene;
                 this.ship.scale.set(0.1, 0.1, 0.1);
+                this.ship.rotation.y = Math.PI / 2; 
+
                 this.ship.position.set(0, -window.innerHeight * 0.3 / 100, 0);
                 this.scene.add(this.ship);
             }, undefined, createFallbackShip);

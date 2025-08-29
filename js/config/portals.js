@@ -1,87 +1,86 @@
 // Portals configuration
 export const PORTAL_CONFIG = [
     {
-        id: 'LifeGame',
-        name: "Life's Game",
+        id: 'portal-1',
+        name: "Clean Squared Place",
         modelPath: '/assets/models/skybox.glb',
         position: { x: -49, y: 4, z: -49 },
         rotation: { x: 0, y: 0, z: 0 },
         scale: 2.0,
-        description: 'El Juego de la Vida',
+        description: 'Ephemeral existences, molecular arrangements with wills that die and reveal essential elements for creation.',
         link: 'clean-squaredplace/cleansquaredplace.html'
     },
     {
-        id: 'portal-1',
-        name: 'Proyecto 1',
+        id: 'portal-2',
+        name: 'Nitrogenous Bases',
         modelPath: '/assets/models/Adenina.glb',
         position: { x: 1, y: 4, z: -49 },
         rotation: { x: 0, y: Math.PI/4, z: 0 },
         scale: 2.0,
-        description: 'Descripción del proyecto 1',
-        link: 'anothearth/anothearth.html' // Ejemplo de enlace externo
+        description: 'In the depths of molecular existence, every experience whispers the primordial secrets of life.',
+        link: 'n-bases/nbases.html'
     },
     {
-        id: 'portal-2',
-        name: 'Proyecto 1',
+        id: 'portal-3',
+        name: 'Game of Life',
         modelPath: '/assets/models/Adenina.glb',
         position: { x: 49, y: 4, z: -49 },
         rotation: { x: 0, y: Math.PI/4, z: 0 },
         scale: 2.0,
-        description: 'Descripción del proyecto 1',
-        link: 'clean-squaredplace/cleansquaredplace.html' // Ejemplo de enlace externo
-    },
-    {
-        id: 'portal-3',
-        name: 'Proyecto 1',
-        modelPath: '/assets/models/Adenina.glb',
-        position: { x: -49, y: 4, z: 1 },
-        rotation: { x: 0, y: Math.PI/4, z: 0 },
-        scale: 2.0,
-        description: 'Descripción del proyecto 1',
-        link: 'https://ejemplo.com/experiencia' // Ejemplo de enlace externo
+        description: 'In the perpetual dance of creation and destruction, each cell is a verse of the universal poem. Simple rules give rise to infinite complexities, reflecting the mystery of how life emerges from the void and returns to it.',
+        link: 'game-life/gameoflife.html'
     },
     {
         id: 'portal-4',
-        name: 'Proyecto 1',
-        modelPath: '/assets/models/Adenina.glb',
-        position: { x: 49, y: 4, z: 1 },
+        name: 'AnothEarth',
+        modelPath: '/assets/models/AnothEarth.glb',
+        position: { x: -49, y: 4, z: 1 },
         rotation: { x: 0, y: Math.PI/4, z: 0 },
-        scale: 2.0,
-        description: 'Descripción del proyecto 1',
-        link: 'https://ejemplo.com/experiencia' // Ejemplo de enlace externo
+        scale: 0.03,
+        description: 'A distorted mirror of our own world, where reality intertwines with fantasy. What if Earth had a lost twin in the multiverse?',
+        link: 'AnothEarth/anothearth.html'
     },
-
     {
         id: 'portal-5',
-        name: 'Proyecto 1',
-        modelPath: '/assets/models/Adenina.glb',
-        position: { x: -49, y: 4, z: 49 },
+        name: 'Maxkodia',
+        modelPath: '/assets/models/MaxkodiaPlanet.glb',
+        position: { x: 49, y: 4, z: 1 },
         rotation: { x: 0, y: Math.PI/4, z: 0 },
-        scale: 2.0,
-        description: 'Descripción del proyecto 1',
-        link: 'https://ejemplo.com/experiencia' // Ejemplo de enlace externo
+        scale: 0.01,
+        description: 'Brought forth from the depths of the cosmos, where time bends upon itself and now trapped here, there exists a planet that holds the secrets of civilizations that never came to be.',
+        link: 'maxkodiaplanet/maxkodiaplanet.html'
     },
 
     {
         id: 'portal-6',
-        name: 'Proyecto 1',
+        name: 'Space Words',
+        modelPath: '/assets/models/Adenina.glb',
+        position: { x: -49, y: 4, z: 49 },
+        rotation: { x: 0, y: Math.PI/4, z: 0 },
+        scale: 2.0,
+        description: 'Can we capture the infinite within language?',
+        link: 'space-words/spacewords.html'
+    },
+    {
+        id: 'portal-7',
+        name: 'Gardhan Thinker',
         modelPath: '/assets/models/Adenina.glb',
         position: { x: 1, y: 4, z: 49 },
         rotation: { x: 0, y: Math.PI/4, z: 0 },
         scale: 2.0,
-        description: 'Descripción del proyecto 1',
-        link: 'https://ejemplo.com/experiencia' // Ejemplo de enlace externo
+        description: 'A labyrinth of thoughts where consciousness meets the pure essence of contemplation. A space where time stands still and only the act of thinking remains.',
+        link: 'thinker/thinker.html'
     },
 
     {
-        id: 'portal-7',
-        name: 'Proyecto 1',
-        modelPath: '/assets/models/Adenina.glb',
+        id: 'portal-8',
+        name: 'Deep Space',
+        modelPath: '/assets/models/ship.glb',
         position: { x: 49, y: 4, z: 49 },
         rotation: { x: 0, y: Math.PI/4, z: 0 },
-        scale: 2.0,
-        description: 'Descripción del proyecto 1',
-        link: 'https://ejemplo.com/experiencia' // Ejemplo de enlace externo
+        scale: 0.1,
+        description: 'In the depths of the cosmos, where time is but a memory and space an illusion, we come face to face with what we truly are: travelers of darkness seeking light in the abyss, where only nonexistence awaits us.',
+        link: 'deepspace/deepspace.html'
     },
     
     // Agrega más portales según sea necesario

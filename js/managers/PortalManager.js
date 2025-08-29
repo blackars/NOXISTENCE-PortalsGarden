@@ -78,8 +78,11 @@ export class PortalManager {
     }
 
     createSphereEffect(config) {
+        // Usar el diámetro personalizado si está definido, de lo contrario usar 1.5 como valor por defecto
+        const sphereDiameter = config.sphereDiameter || 1.5;
+        
         // Crear la esfera de efecto
-        const sphereGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+        const sphereGeometry = new THREE.SphereGeometry(sphereDiameter, 32, 32);
         const sphereMaterial = new THREE.MeshBasicMaterial({
             color: 0x000000,
             transparent: true,

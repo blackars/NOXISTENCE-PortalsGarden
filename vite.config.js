@@ -27,6 +27,10 @@ export default defineConfig({
         cleansquaredplace: resolve(__dirname, 'experiences/cleansquaredplace/cleansquaredplace.html'),
         spacewords: resolve(__dirname, 'experiences/spacewords/spacewords.html'),
         nbases: resolve(__dirname, 'experiences/n-bases/nbases.html'),
+        humanthinker: resolve(__dirname, 'experiences/human-thinker/humanthinker.html'),
+        deepspace: resolve(__dirname, 'experiences/deep-space/deepspace.html'),
+        thinker: resolve(__dirname, 'experiences/thinker/thinker.html'),
+
         // 👉 agrega aquí más experiencias si lo necesitas
         // ejemplo:
         // otra: resolve(__dirname, 'experiences/OtraExperiencia/index.html')

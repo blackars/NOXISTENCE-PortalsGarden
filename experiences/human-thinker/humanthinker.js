@@ -138,7 +138,7 @@ export default function initWordsRain(opts = {}) {
           c.material = c.material || new THREE.MeshStandardMaterial({color: 0xffffff});
         } 
       });
-      model.scale.setScalar(30);
+      model.scale.setScalar(50);
       model.position.set(0, 20, 0);
       brainRoot.add(model);
       brainRoot.userData.bounds = new THREE.Box3().setFromObject(model);

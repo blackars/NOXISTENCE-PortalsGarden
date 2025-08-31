@@ -13,10 +13,11 @@ export const PORTAL_CONFIG = [
     {
         id: 'portal-2',
         name: 'Nitrogenous Bases',
-        modelPath: '/assets/models/Adenina.glb',
-        position: { x: 5, y: 9, z: -45 },
+        modelPath: '/assets/models/NBasesPortal.glb',
+        position: { x: 5, y: 10, z: -45 },
         rotation: { x: 0, y: Math.PI/4, z: 0 },
-        scale: 3.0,
+        scale: 6.0,
+        sphereDiameter: 1.0,  // Esfera más grande para este modelo
         description: 'In the depths of molecular existence, every experience whispers the primordial secrets of life.',
         link: 'n-bases/nbases.html'
     },
@@ -66,10 +67,11 @@ export const PORTAL_CONFIG = [
     {
         id: 'portal-7',
         name: 'Gardhan Thinker',
-        modelPath: '/assets/models/Adenina.glb',
-        position: { x: 5, y: 4, z: 45 },
-        rotation: { x: 0, y: Math.PI/4, z: 0 },
-        scale: 2.0,
+        modelPath: '/assets/models/brain.glb',
+        position: { x: 5, y: 8, z: 45 },
+        rotation: { x: 0, y: Math.PI, z: 0 },
+        scale: 5.0,
+        sphereDiameter: 1.0,  // Esfera más grande para este modelo
         description: 'A labyrinth of thoughts where consciousness meets the pure essence of contemplation. A space where time stands still and only the act of thinking remains.',
         link: 'thinker/thinker.html'
     },
@@ -79,7 +81,7 @@ export const PORTAL_CONFIG = [
         name: 'Deep Space',
         modelPath: '/assets/models/ship.glb',
         position: { x: 45, y: 4.5, z: 45 },
-        rotation: { x: 0, y: Math.PI/4, z: 0 },
+        rotation: { x: 0, y: Math.PI/8, z: 0 },
         scale: 0.7,
         sphereDiameter: 5.0,  // Esfera más grande para este modelo
         description: 'In the depths of the cosmos, where time is but a memory and space an illusion, we come face to face with what we truly are: travelers of darkness seeking light in the abyss, where only nonexistence awaits us.',

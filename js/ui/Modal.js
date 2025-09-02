@@ -79,6 +79,7 @@ export class Modal {
             opacity: 0;
             transition: opacity 0.3s ease-in-out 0.3s;
             text-align: center;
+            font-family: 'Gobold', ui-sans-serif;
             max-width: 80%;
         `;
         
@@ -87,7 +88,7 @@ export class Modal {
         this.title.style.cssText = `
             margin: 0 0 1rem 0;
             font-size: 2rem;
-            text-transform: uppercase;
+            font-family: 'Gobold', ui-sans-serif;
             letter-spacing: 2px;
         `;
         
@@ -121,6 +122,7 @@ export class Modal {
             transition: all 0.3s ease;
             border-radius: 20px;
             outline: none;
+            font-family: 'Gobold', ui-sans-serif;
         `;
         
         this.openButton.addEventListener('mouseover', () => {
@@ -147,6 +149,7 @@ export class Modal {
             transition: all 0.3s ease;
             border-radius: 20px;
             outline: none;
+            font-family: 'Gobold', ui-sans-serif;
         `;
         
         this.closeButton.addEventListener('mouseover', () => {

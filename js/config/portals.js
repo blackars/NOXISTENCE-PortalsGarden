@@ -3,10 +3,11 @@ export const PORTAL_CONFIG = [
     {
         id: 'portal-1',
         name: "Clean Squared Place",
-        modelPath: '/assets/models/skybox.glb',
+        modelPath: '/assets/models/PortalCube.glb',
         position: { x: -45, y: 4, z: -45 },
         rotation: { x: 0, y: 0, z: 0 },
-        scale: 2.0,
+        scale: 1.0,
+        sphereDiameter: 3.0,
         description: 'Ephemeral existences, molecular arrangements with wills that die and reveal essential elements for creation.',
         link: 'clean-squaredplace/cleansquaredplace.html'
     },
@@ -17,17 +18,18 @@ export const PORTAL_CONFIG = [
         position: { x: 5, y: 10, z: -45 },
         rotation: { x: 0, y: Math.PI/4, z: 0 },
         scale: 6.0,
-        sphereDiameter: 1.0,  // Esfera más grande para este modelo
+        sphereDiameter: 1.0,
         description: 'In the depths of molecular existence, every experience whispers the primordial secrets of life.',
         link: 'n-bases/nbases.html'
     },
     {
         id: 'portal-3',
         name: 'Game of Life',
-        modelPath: '/assets/models/Adenina.glb',
+        modelPath: '/assets/models/PortalSphere.glb',
         position: { x: 45, y: 4, z: -45 },
         rotation: { x: 0, y: Math.PI/4, z: 0 },
-        scale: 2.0,
+        scale: 1.0,
+        sphereDiameter: 3.0,
         description: 'In the perpetual dance of creation and destruction, each cell is a verse of the universal poem. Simple rules give rise to infinite complexities, reflecting the mystery of how life emerges from the void and returns to it.',
         link: 'game-life/gameoflife.html'
     },

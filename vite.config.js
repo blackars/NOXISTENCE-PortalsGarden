@@ -21,14 +21,14 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         // Experiencias adicionales
-        anothearth: resolve(__dirname, 'experiences/anothearth/anothearth.html'),
-        maxkodia: resolve(__dirname, 'experiences/maxkodia/maxkodiaplanet.html'),
-        gameoflife: resolve(__dirname, 'experiences/gameoflife/gameoflife.html'),
-        cleansquaredplace: resolve(__dirname, 'experiences/cleansquaredplace/cleansquaredplace.html'),
-        spacewords: resolve(__dirname, 'experiences/spacewords/spacewords.html'),
+        anothearth: resolve(__dirname, 'experiences/AnothEarth/anothearth.html'),
+        maxkodia: resolve(__dirname, 'experiences/maxkodiaplanet/maxkodiaplanet.html'),
+        gameoflife: resolve(__dirname, 'experiences/game-life/gameoflife.html'),
+        cleansquaredplace: resolve(__dirname, 'experiences/clean-squaredplace/cleansquaredplace.html'),
+        spacewords: resolve(__dirname, 'experiences/space-words/spacewords.html'),
         nbases: resolve(__dirname, 'experiences/n-bases/nbases.html'),
         humanthinker: resolve(__dirname, 'experiences/human-thinker/humanthinker.html'),
-        deepspace: resolve(__dirname, 'experiences/deep-space/deepspace.html'),
+        deepspace: resolve(__dirname, 'experiences/deepspace/deepspace.html'),
         thinker: resolve(__dirname, 'experiences/thinker/thinker.html'),
 
         // 👉 agrega aquí más experiencias si lo necesitas

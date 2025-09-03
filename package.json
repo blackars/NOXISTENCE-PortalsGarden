@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node scripts/copy-experiences.js",
+    "update-paths": "node scripts/update-paths.js",
+    "copy-assets": "node scripts/copy-experiences.js",
+    "build": "npm run update-paths && vite build && npm run copy-assets",
     "preview": "vite preview",
     "deploy": "npm run build && netlify deploy --prod"
   },
@@ -17,6 +19,7 @@
     "@gltf-transform/cli": "^4.2.1",
     "@tensorflow/tfjs-backend-webgl": "^4.21.0",
     "@types/three": "^0.179.0",
+    "minimatch": "^10.0.3",
     "vite": "^5.2.0",
     "vite-plugin-compression": "^0.5.1"
   }

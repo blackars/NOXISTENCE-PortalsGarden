@@ -1,6 +1,6 @@
-import * as THREE from 'three';
+import * as THREE from "/node_modules/three/build/three.module.js";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { GLTFLoader } from "/assets/js/loaders/GLTFLoader.js";
 
 let scene, camera, renderer, controls, terrain, player, mixer;
 let clock = new THREE.Clock();

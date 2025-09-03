@@ -33,6 +33,52 @@
   to = "/index.html"
   status = 200
 
+# Handle specific file types with proper MIME types
+[[headers]]
+  for = "/*.js"
+  [headers.values]
+    Content-Type = "text/javascript; charset=utf-8"
+
+[[headers]]
+  for = "/*.css"
+  [headers.values]
+    Content-Type = "text/css; charset=utf-8"
+
+[[headers]]
+  for = "/*.otf"
+  [headers.values]
+    Content-Type = "font/otf"
+    Access-Control-Allow-Origin = "*"
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.ttf"
+  [headers.values]
+    Content-Type = "font/ttf"
+    Access-Control-Allow-Origin = "*"
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.woff"
+  [headers.values]
+    Content-Type = "font/woff"
+    Access-Control-Allow-Origin = "*"
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.woff2"
+  [headers.values]
+    Content-Type = "font/woff2"
+    Access-Control-Allow-Origin = "*"
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.glb"
+  [headers.values]
+    Content-Type = "model/gltf-binary"
+    Access-Control-Allow-Origin = "*"
+    Cache-Control = "public, max-age=31536000, immutable"
+
 # MIME types para assets
 [[headers]]
   for = "/assets/*.js"

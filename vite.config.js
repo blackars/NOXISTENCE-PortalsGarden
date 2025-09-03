@@ -10,13 +10,19 @@ export default defineConfig({
       '@config': resolve(__dirname, 'js/config'),
       '@managers': resolve(__dirname, 'js/managers'),
       '@ui': resolve(__dirname, 'js/ui'),
-      '@assets': resolve(__dirname, 'public/assets')
+      '@assets': resolve(__dirname, 'public/assets'),
+      'three': resolve(__dirname, 'node_modules/three')
     }
   },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    emptyOutDir: false,
+    emptyOutDir: true,
+    assetsInlineLimit: 0, // Ensure all assets are copied as files
+    commonjsOptions: {
+      include: [/node_modules/],
+      transformMixedEsModules: true,
+    },
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html')

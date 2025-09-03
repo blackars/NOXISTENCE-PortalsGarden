@@ -91,7 +91,7 @@ const loader = new GLTFLoader();
 // Claves deben coincidir con data-mol en HTML
 const MODELS = {
   adenina: '/assets/models/Adenina.glb',
-  timina: '/assets/models/Timina.glb', // HTML usa "timina"; archivo: Timina.glb
+  timina: '/assets/models/Timina.glb',
   citosina: '/assets/models/Citosina.glb',
   guanina: '/assets/models/Guanina.glb',
 };

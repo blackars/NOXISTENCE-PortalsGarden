@@ -403,16 +403,14 @@
             
             // Función para cargar el script principal
             function loadMainScript() {
-                const script = document.createElement('script');
-                script.type = 'module';
-                script.src = './nbases.js';
-                script.onload = function() {
-                    console.log('✅ Experiencia de Bases Nitrogenadas cargada correctamente');
-                };
-                script.onerror = function() {
-                    console.error('❌ Error al cargar nbases.js');
-                };
-                document.body.appendChild(script);
+                // Vite will handle the module bundling and path resolution
+                import('./nbases.js')
+                    .then(() => {
+                        console.log('✅ Experiencia de Bases Nitrogenadas cargada correctamente');
+                    })
+                    .catch((error) => {
+                        console.error('❌ Error al cargar nbases.js:', error);
+                    });
             }
             
             // Prevenir recarga accidental

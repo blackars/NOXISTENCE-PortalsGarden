@@ -25,7 +25,11 @@ export default defineConfig({
     },
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html')
+        main: resolve(__dirname, 'index.html'),
+        // Add all experience entry points
+        nbases: resolve(__dirname, 'experiences/n-bases/NBases.html'),
+        // Add other experiences here as needed
+        // 'experience-name': resolve(__dirname, 'experiences/experience-folder/entry-file.html'),
       },
       output: {
         assetFileNames: (assetInfo) => {
@@ -33,10 +37,32 @@ export default defineConfig({
           if (extType === 'css') {
             return 'assets/css/[name]-[hash][extname]';
           }
+          // Keep experience assets organized by experience name
+          if (assetInfo.name.includes('experiences/')) {
+            const expName = assetInfo.name.split('/')[1];
+            return `assets/experiences/${expName}/[name]-[hash][extname]`;
+          }
           return 'assets/[name]-[hash][extname]';
         },
-        entryFileNames: 'assets/js/[name]-[hash].js',
-        chunkFileNames: 'assets/js/[name]-[hash].js'
+        entryFileNames: (chunkInfo) => {
+          // Keep entry points organized by experience
+          if (chunkInfo.facadeModuleId && chunkInfo.facadeModuleId.includes('experiences/')) {
+            const expName = chunkInfo.facadeModuleId.split('/')[1];
+            return `assets/experiences/${expName}/[name]-[hash].js`;
+          }
+          return 'assets/js/[name]-[hash].js';
+        },
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        manualChunks: (id) => {
+          // Create separate vendor chunks for better caching
+          if (id.includes('node_modules/three')) {
+            return 'vendor_three';
+          }
+          if (id.includes('node_modules/')) {
+            return 'vendor';
+          }
+          return null;
+        }
       }
     }
   },

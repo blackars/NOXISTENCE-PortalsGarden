@@ -14,18 +14,24 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' blob:;"
 
-# Handle client-side routing for SPA
+# Handle static files and SPA routing
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/assets/*"
+  to = "/assets/:splat"
   status = 200
 
-# Explicitly serve experience HTML files
+# Serve experience files directly
 [[redirects]]
   from = "/experiences/*"
   to = "/experiences/:splat"
   status = 200
   force = false
+
+# Handle all other routes with SPA fallback
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
 # MIME types para assets
 [[headers]]

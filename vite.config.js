@@ -16,20 +16,10 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    emptyOutDir: true,
+    emptyOutDir: false,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
-        // Temporarily disabled anothearth to test build
-        // 'experiences/anothearth/anothearth': resolve(__dirname, 'experiences/anothearth/anothearth.html'),
-        'experiences/game-life/gameoflife': resolve(__dirname, 'experiences/game-life/gameoflife.html'),
-        'experiences/maxkodiaplanet/maxkodiaplanet': resolve(__dirname, 'experiences/maxkodiaplanet/maxkodiaplanet.html'),
-        'experiences/clean-squaredplace/cleansquaredplace': resolve(__dirname, 'experiences/clean-squaredplace/cleansquaredplace.html'),
-        'experiences/space-words/spacewords': resolve(__dirname, 'experiences/space-words/spacewords.html'),
-        'experiences/n-bases/nbases': resolve(__dirname, 'experiences/n-bases/nbases.html'),
-        'experiences/human-thinker/humanthinker': resolve(__dirname, 'experiences/human-thinker/humanthinker.html'),
-        'experiences/deepspace/deepspace': resolve(__dirname, 'experiences/deepspace/deepspace.html'),
-        'experiences/thinker/thinker': resolve(__dirname, 'experiences/thinker/thinker.html')
+        main: resolve(__dirname, 'index.html')
       },
       output: {
         assetFileNames: (assetInfo) => {

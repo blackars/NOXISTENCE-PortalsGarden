@@ -20,7 +20,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        'experiences/anothearth/anothearth': resolve(__dirname, 'experiences/anothearth/anothearth.html'),
+        // Temporarily disabled anothearth to test build
+        // 'experiences/anothearth/anothearth': resolve(__dirname, 'experiences/anothearth/anothearth.html'),
         'experiences/game-life/gameoflife': resolve(__dirname, 'experiences/game-life/gameoflife.html'),
         'experiences/maxkodiaplanet/maxkodiaplanet': resolve(__dirname, 'experiences/maxkodiaplanet/maxkodiaplanet.html'),
         'experiences/clean-squaredplace/cleansquaredplace': resolve(__dirname, 'experiences/clean-squaredplace/cleansquaredplace.html'),

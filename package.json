@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && xcopy /E /I /Y experiences dist\\experiences",
+    "build": "vite build && node scripts/copy-experiences.js",
     "preview": "vite preview",
     "deploy": "npm run build && netlify deploy --prod"
   },

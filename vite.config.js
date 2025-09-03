@@ -19,21 +19,21 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
+        main: './index.html',
         // Experiencias adicionales
-        anothearth: resolve(__dirname, 'experiences/AnothEarth/anothearth.html'),
-        gameoflife: resolve(__dirname, 'experiences/game-life/gameoflife.html'),
-        maxkodiaplanet: resolve(__dirname, 'experiences/maxkodiaplanet/maxkodiaplanet.html'),
-        cleansquaredplace: resolve(__dirname, 'experiences/clean-squaredplace/cleansquaredplace.html'),
-        spacewords: resolve(__dirname, 'experiences/space-words/spacewords.html'),
-        nbases: resolve(__dirname, 'experiences/n-bases/nbases.html'),
-        humanthinker: resolve(__dirname, 'experiences/human-thinker/humanthinker.html'),
-        deepspace: resolve(__dirname, 'experiences/deepspace/deepspace.html'),
-        thinker: resolve(__dirname, 'experiences/thinker/thinker.html'),
+        anothearth: './experiences/anothearth/anothearth.html',
+        gameoflife: './experiences/game-life/gameoflife.html',
+        maxkodiaplanet: './experiences/maxkodiaplanet/maxkodiaplanet.html',
+        cleansquaredplace: './experiences/clean-squaredplace/cleansquaredplace.html',
+        spacewords: './experiences/space-words/spacewords.html',
+        nbases: './experiences/n-bases/nbases.html',
+        humanthinker: './experiences/human-thinker/humanthinker.html',
+        deepspace: './experiences/deepspace/deepspace.html',
+        thinker: './experiences/thinker/thinker.html',
 
         // 👉 agrega aquí más experiencias si lo necesitas
         // ejemplo:
-        // otra: resolve(__dirname, 'experiences/OtraExperiencia/index.html')
+        // otra: './experiences/OtraExperiencia/index.html'
       },
       output: {
         assetFileNames: (assetInfo) => {

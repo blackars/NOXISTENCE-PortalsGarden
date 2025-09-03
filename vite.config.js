@@ -27,7 +27,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         // Add all experience entry points
-        nbases: resolve(__dirname, 'experiences/n-bases/NBases.html'),
+        nbases: resolve(__dirname, 'experiences/n-bases/nbases.html'),
         // Add other experiences here as needed
         // 'experience-name': resolve(__dirname, 'experiences/experience-folder/entry-file.html'),
       },

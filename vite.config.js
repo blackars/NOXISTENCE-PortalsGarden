@@ -22,7 +22,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         // Experiencias adicionales
         anothearth: resolve(__dirname, 'experiences/AnothEarth/anothearth.html'),
-        maxkodia: resolve(__dirname, 'experiences/maxkodiaplanet/maxkodiaplanet.html'),
+        maxkodiaplanet: resolve(__dirname, 'experiences/maxkodiaplanet/maxkodiaplanet.html'),
         gameoflife: resolve(__dirname, 'experiences/game-life/gameoflife.html'),
         cleansquaredplace: resolve(__dirname, 'experiences/clean-squaredplace/cleansquaredplace.html'),
         spacewords: resolve(__dirname, 'experiences/space-words/spacewords.html'),

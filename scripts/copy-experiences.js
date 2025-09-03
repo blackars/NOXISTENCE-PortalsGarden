@@ -1,23 +1,22 @@
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { promisify } from 'util';
-import { pipeline as _pipeline } from 'stream';
-import { createReadStream, createWriteStream, promises as fs, existsSync } from 'fs';
-import minimatch from 'minimatch';
+import { copyFile, mkdir, readdir, stat, readFile, writeFile } from 'fs/promises';
+import { existsSync } from 'fs';
 
-const pipeline = promisify(_pipeline);
-const { mkdir, readdir, stat } = fs;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const rootDir = join(__dirname, '..');
 
-// Helper function to create a write stream with error handling
-function createFsWriteStream(path, options) {
-  return createWriteStream(path, options)
-    .on('error', (err) => {
-      console.error(`Error writing to ${path}:`, err);
-      throw err;
-    });
+// Helper function to copy a file with directory creation
+async function copyFileWithDirs(src, dest) {
+  try {
+    await mkdir(dirname(dest), { recursive: true });
+    await copyFile(src, dest);
+    console.log(`Copied: ${src.replace(rootDir, '')} -> ${dest.replace(rootDir, '')}`);
+  } catch (err) {
+    console.error(`Error copying ${src} to ${dest}:`, err);
+    throw err;
+  }
 }
 
 // Define source and destination directories
@@ -62,7 +61,7 @@ const srcDirs = [
   }
 ];
 
-async function copyDir(src, dest, options = {}) {
+async function copyDir(src, dest) {
   try {
     await mkdir(dest, { recursive: true });
     const entries = await readdir(src, { withFileTypes: true });
@@ -73,27 +72,22 @@ async function copyDir(src, dest, options = {}) {
 
       // Skip node_modules and other unnecessary directories
       if (entry.isDirectory() && (entry.name === 'node_modules' || entry.name === '.git')) {
+        console.log(`Skipping directory: ${srcPath}`);
         continue;
       }
 
       if (entry.isDirectory()) {
-        await copyDir(srcPath, destPath, options);
+        console.log(`Entering directory: ${srcPath}`);
+        await copyDir(srcPath, destPath);
       } else {
         // Skip source maps and other unnecessary files
         if (srcPath.endsWith('.map') || srcPath.includes('__tests__')) {
+          console.log(`Skipping file: ${srcPath}`);
           continue;
         }
         
-        // Ensure destination directory exists
-        await mkdir(dirname(destPath), { recursive: true });
-        
-        // Copy file with error handling
         try {
-          await pipeline(
-            createReadStream(srcPath),
-            createFsWriteStream(destPath, { flags: 'w' })
-          );
-          console.log(`Copied: ${srcPath.replace(rootDir, '')} -> ${destPath.replace(rootDir, '')}`);
+          await copyFileWithDirs(srcPath, destPath);
         } catch (err) {
           console.error(`Error copying ${srcPath}:`, err);
           throw err;
@@ -103,20 +97,6 @@ async function copyDir(src, dest, options = {}) {
   } catch (error) {
     console.error(`Error in copyDir for ${src}:`, error);
     throw error;
-  }
-}
-
-async function copyFile(src, dest) {
-  try {
-    await mkdir(dirname(dest), { recursive: true });
-    await pipeline(
-      createReadStream(src),
-      createFsWriteStream(dest, { flags: 'w' })
-    );
-    console.log(`Copied: ${src.replace(rootDir, '')} -> ${dest.replace(rootDir, '')}`);
-  } catch (err) {
-    console.error(`Error copying ${src} to ${dest}:`, err);
-    throw err;
   }
 }
 
@@ -140,6 +120,8 @@ async function copyFiles() {
       const destPath = join(distDir, item.to);
       
       console.log(`\nProcessing: ${item.from} -> ${item.to}`);
+      console.log(`Source: ${srcPath}`);
+      console.log(`Destination: ${destPath}`);
       
       try {
         // Check if source exists
@@ -151,11 +133,11 @@ async function copyFiles() {
         const stats = await stat(srcPath);
         
         if (stats.isDirectory()) {
-          // Copy directory
-          await copyDir(srcPath, destPath, item.options || {});
+          console.log(`Copying directory: ${srcPath} -> ${destPath}`);
+          await copyDir(srcPath, destPath);
         } else {
-          // Copy single file
-          await copyFile(srcPath, destPath);
+          console.log(`Copying file: ${srcPath} -> ${destPath}`);
+          await copyFileWithDirs(srcPath, destPath);
         }
       } catch (error) {
         console.error(`Error processing ${item.from}:`, error);

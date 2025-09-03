@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gardhan Thinker</title>
+
+  <style>
+    html, body { 
+      height: 100%; 
+      margin: 0; 
+      background: #ffffff; 
+      font-family: Arial, sans-serif;
+    }
+    @font-face {
+  font-family: 'Gobold';
+  src: url('/fonts/Gobold.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Kitisakkullian';
+  src: url('/fonts/Kitisakkullian.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'AlienLines';
+  src: url('/fonts/AlienLines.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'AlienHieroglyph';
+  src: url('/fonts/AlienHieroglyph.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+    #app { 
+      width: 100vw; 
+      height: 100vh; 
+      overflow: hidden; 
+      position: relative; 
+    }
+    canvas { 
+      display: block; 
+      width: 100%; 
+      height: 100%;
+    }
+    .lock-cursor { 
+      cursor: none; 
+    }
+
+    .title {
+        position: absolute;
+        top: 40px;
+        left: 40px;
+        text-align: center;
+        font-family: 'Gobold', ui-sans-serif;
+        font-size: clamp(36px, 6vmin, 60px);
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        white-space: nowrap;
+        color: #000;
+        z-index: 20;
+        padding: 0 20px;
+        pointer-events: none;
+        }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <div class="title">Gardhan Thinker</div>
+  <!-- Cargar el componente como módulo local -->
+  <script type="module">
+    import initWordsRain from './thinker.js';
+    // iniciar la escena
+    initWordsRain({
+      container: document.getElementById('app'),
+      modelPath: '/assets/models/brain.glb'
+    });
+  </script>
+  <div id="music"></div>
+
+        <script type="module">
+            import createBgMusic from "/bgmusic.js";
+        
+            createBgMusic("music", {
+            position: "top-right",
+            color: "#ffffff",
+            src: "/sounds/ambient.mp3"
+            });
+        </script>
+</body>
+</html>

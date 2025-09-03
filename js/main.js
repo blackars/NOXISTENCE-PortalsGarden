@@ -310,7 +310,24 @@ animate();
 console.log('Presiona P para alternar el control del ratón');
 console.log('Haz clic en la pantalla para habilitar los controles');
 
-// Busca la línea donde se importa dinámicamente nbases.js, por ejemplo:
-// import(/* webpackIgnore: true */ "/experiences/n-bases/nbases.js")
-// Cambia la ruta a una relativa o absoluta correcta, por ejemplo:
-import("./experiences/n-bases/nbases.js")
+// Si quieres cargar el archivo solo en producción y evitar que el bundler lo procese:
+if (process.env.NODE_ENV === 'production') {
+    import(/* webpackIgnore: true */ 'https://portalsgarden.netlify.app/experiences/n-bases/nbases.js')
+        .then(mod => {
+            // ...usar el módulo...
+        })
+        .catch(err => {
+            console.error('Error al cargar nbases.js:', err);
+        });
+}
+
+// Si quieres cargarlo localmente en desarrollo, asegúrate que el archivo exista:
+if (process.env.NODE_ENV !== 'production') {
+    import('./experiences/n-bases/nbases.js')
+        .then(mod => {
+            // ...usar el módulo...
+        })
+        .catch(err => {
+            console.error('Error al cargar nbases.js:', err);
+        });
+}

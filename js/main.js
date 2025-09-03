@@ -309,3 +309,8 @@ animate();
 // Instrucciones
 console.log('Presiona P para alternar el control del ratón');
 console.log('Haz clic en la pantalla para habilitar los controles');
+
+// Busca la línea donde se importa dinámicamente nbases.js, por ejemplo:
+// import(/* webpackIgnore: true */ "/experiences/n-bases/nbases.js")
+// Cambia la ruta a una relativa o absoluta correcta, por ejemplo:
+import("./experiences/n-bases/nbases.js")

@@ -19,21 +19,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: './index.html',
-        // Experiencias adicionales
-        anothearth: './experiences/anothearth/anothearth.html',
-        gameoflife: './experiences/game-life/gameoflife.html',
-        maxkodiaplanet: './experiences/maxkodiaplanet/maxkodiaplanet.html',
-        cleansquaredplace: './experiences/clean-squaredplace/cleansquaredplace.html',
-        spacewords: './experiences/space-words/spacewords.html',
-        nbases: './experiences/n-bases/nbases.html',
-        humanthinker: './experiences/human-thinker/humanthinker.html',
-        deepspace: './experiences/deepspace/deepspace.html',
-        thinker: './experiences/thinker/thinker.html',
-
-        // 👉 agrega aquí más experiencias si lo necesitas
-        // ejemplo:
-        // otra: './experiences/OtraExperiencia/index.html'
+        main: resolve(__dirname, 'index.html')
       },
       output: {
         assetFileNames: (assetInfo) => {

@@ -19,16 +19,16 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: './index.html',
-        'experiences/anothearth/anothearth': './experiences/anothearth/anothearth.html',
-        'experiences/game-life/gameoflife': './experiences/game-life/gameoflife.html',
-        'experiences/maxkodiaplanet/maxkodiaplanet': './experiences/maxkodiaplanet/maxkodiaplanet.html',
-        'experiences/clean-squaredplace/cleansquaredplace': './experiences/clean-squaredplace/cleansquaredplace.html',
-        'experiences/space-words/spacewords': './experiences/space-words/spacewords.html',
-        'experiences/n-bases/nbases': './experiences/n-bases/nbases.html',
-        'experiences/human-thinker/humanthinker': './experiences/human-thinker/humanthinker.html',
-        'experiences/deepspace/deepspace': './experiences/deepspace/deepspace.html',
-        'experiences/thinker/thinker': './experiences/thinker/thinker.html'
+        main: resolve(__dirname, 'index.html'),
+        'experiences/anothearth/anothearth': resolve(__dirname, 'experiences/anothearth/anothearth.html'),
+        'experiences/game-life/gameoflife': resolve(__dirname, 'experiences/game-life/gameoflife.html'),
+        'experiences/maxkodiaplanet/maxkodiaplanet': resolve(__dirname, 'experiences/maxkodiaplanet/maxkodiaplanet.html'),
+        'experiences/clean-squaredplace/cleansquaredplace': resolve(__dirname, 'experiences/clean-squaredplace/cleansquaredplace.html'),
+        'experiences/space-words/spacewords': resolve(__dirname, 'experiences/space-words/spacewords.html'),
+        'experiences/n-bases/nbases': resolve(__dirname, 'experiences/n-bases/nbases.html'),
+        'experiences/human-thinker/humanthinker': resolve(__dirname, 'experiences/human-thinker/humanthinker.html'),
+        'experiences/deepspace/deepspace': resolve(__dirname, 'experiences/deepspace/deepspace.html'),
+        'experiences/thinker/thinker': resolve(__dirname, 'experiences/thinker/thinker.html')
       },
       output: {
         assetFileNames: (assetInfo) => {

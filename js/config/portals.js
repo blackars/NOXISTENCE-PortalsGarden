@@ -42,7 +42,7 @@ export const PORTAL_CONFIG = [
         scale: 0.02,
         sphereDiameter: 230.0,  // Esfera más grande para este modelo
         description: 'A distorted mirror of our own world, where reality intertwines with fantasy. What if Earth had a lost twin in the multiverse?',
-        link: 'AnothEarth/anothearth.html'
+        link: 'anothearth/anothearth.html'
     },
     {
         id: 'portal-5',

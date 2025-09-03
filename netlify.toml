@@ -14,19 +14,18 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; connect-src 'self' blob:;"
 
-# Redirección SPA (excluyendo experiencias)
+# Handle client-side routing for SPA
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  force = false
-  conditions = {Path: "!/experiences/*"}
 
-# Redirección para experiencias
+# Explicitly serve experience HTML files
 [[redirects]]
   from = "/experiences/*"
   to = "/experiences/:splat"
   status = 200
+  force = false
 
 # MIME types para assets
 [[headers]]

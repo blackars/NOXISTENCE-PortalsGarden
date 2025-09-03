@@ -1,14 +1,24 @@
-import { mkdir, readdir, stat } from 'node:fs/promises';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { existsSync } from 'node:fs';
-import { pipeline } from 'node:stream/promises';
-import { createReadStream, createWriteStream as createFsWriteStream } from 'node:fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import { promisify } from 'util';
+import { pipeline as _pipeline } from 'stream';
+import { createReadStream, createWriteStream, promises as fs, existsSync } from 'fs';
 import minimatch from 'minimatch';
 
+const pipeline = promisify(_pipeline);
+const { mkdir, readdir, stat } = fs;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const rootDir = join(__dirname, '..');
+
+// Helper function to create a write stream with error handling
+function createFsWriteStream(path, options) {
+  return createWriteStream(path, options)
+    .on('error', (err) => {
+      console.error(`Error writing to ${path}:`, err);
+      throw err;
+    });
+}
 
 // Define source and destination directories
 const srcDirs = [

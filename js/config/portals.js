@@ -15,7 +15,7 @@ export const PORTAL_CONFIG = [
         id: 'portal-2',
         name: 'Nitrogenous Bases',
         modelPath: '/assets/models/NBasesPortal.glb',
-        position: { x: 5, y: 10, z: -45 },
+        position: { x: 0, y: 10, z: -45 },
         rotation: { x: 0, y: Math.PI/4, z: 0 },
         scale: 6.0,
         sphereDiameter: 1.0,

@@ -5,6 +5,9 @@ import viteCompression from 'vite-plugin-compression';
 export default defineConfig({
   base: './',
   publicDir: 'public',
+  optimizeDeps: {
+    include: ['three', 'three/examples/jsm/controls/OrbitControls.js', 'three/examples/jsm/loaders/GLTFLoader.js'],
+  },
   resolve: {
     alias: {
       '@config': resolve(__dirname, 'js/config'),

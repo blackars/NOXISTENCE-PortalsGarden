@@ -19,6 +19,20 @@ async function copyFileWithDirs(src, dest) {
   }
 }
 
+async function processAndCopyJsFile(src, dest) {
+  try {
+    let content = await readFile(src, 'utf-8');
+    // Replace 'three' import with the correct path
+    content = content.replace(/from 'three'/g, "from '/assets/js/three.module.js'");
+    await mkdir(dirname(dest), { recursive: true });
+    await writeFile(dest, content, 'utf-8');
+    console.log(`Processed and Copied JS: ${src.replace(rootDir, '')} -> ${dest.replace(rootDir, '')}`);
+  } catch (err) {
+    console.error(`Error processing and copying JS ${src} to ${dest}:`, err);
+    throw err;
+  }
+}
+
 // Define source and destination directories
 const srcDirs = [
   { 
@@ -38,11 +52,13 @@ const srcDirs = [
   },
   {
     from: 'node_modules/three/examples/jsm/loaders/GLTFLoader.js',
-    to: 'assets/js/GLTFLoader.js'
+    to: 'assets/js/GLTFLoader.js',
+    processJs: true // Mark for processing
   },
   {
     from: 'node_modules/three/examples/jsm/controls/OrbitControls.js',
-    to: 'assets/js/OrbitControls.js'
+    to: 'assets/js/OrbitControls.js',
+    processJs: true // Mark for processing
   },
   // Copy public assets
   {
@@ -136,8 +152,14 @@ async function copyFiles() {
           console.log(`Copying directory: ${srcPath} -> ${destPath}`);
           await copyDir(srcPath, destPath);
         } else {
-          console.log(`Copying file: ${srcPath} -> ${destPath}`);
-          await copyFileWithDirs(srcPath, destPath);
+          // Check for JavaScript files that need processing
+          if (item.processJs && srcPath.endsWith('.js')) {
+            console.log(`Processing and copying JS file: ${srcPath} -> ${destPath}`);
+            await processAndCopyJsFile(srcPath, destPath);
+          } else {
+            console.log(`Copying file: ${srcPath} -> ${destPath}`);
+            await copyFileWithDirs(srcPath, destPath);
+          }
         }
       } catch (error) {
         console.error(`Error processing ${item.from}:`, error);

@@ -70,7 +70,7 @@ export const PORTAL_CONFIG = [
         id: 'portal-7',
         name: 'Gardhan Thinker',
         modelPath: '/assets/models/brain.glb',
-        position: { x: 5, y: 8, z: 45 },
+        position: { x: 0, y: 8, z: 45 },
         rotation: { x: 0, y: Math.PI, z: 0 },
         scale: 5.0,
         sphereDiameter: 1.0,  // Esfera más grande para este modelo

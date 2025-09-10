@@ -1,7 +1,10 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import { globSync } from 'glob';
+import { fileURLToPath, URL } from 'url';
 import viteCompression from 'vite-plugin-compression';
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 // Dynamically generate the input object for Rollup
 const input = Object.fromEntries(
@@ -15,6 +18,15 @@ const input = Object.fromEntries(
 export default defineConfig({
   base: '/',
   publicDir: 'public',
+  resolve: {
+    alias: {
+      '@config': resolve(__dirname, 'js/config'),
+      '@managers': resolve(__dirname, 'js/managers'),
+      '@ui': resolve(__dirname, 'js/ui'),
+      '@assets': resolve(__dirname, 'public/assets'),
+      '@experiences': resolve(__dirname, 'experiences'),
+    }
+  },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',

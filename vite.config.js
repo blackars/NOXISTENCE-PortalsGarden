@@ -14,8 +14,7 @@ export default defineConfig({
       '@managers': resolve(__dirname, 'js/managers'),
       '@ui': resolve(__dirname, 'js/ui'),
       '@assets': resolve(__dirname, 'public/assets'),
-      'three': resolve(__dirname, 'node_modules/three')
-    }
+      '@experiences': resolve(__dirname, 'experiences'),}
   },
   build: {
     outDir: 'dist',

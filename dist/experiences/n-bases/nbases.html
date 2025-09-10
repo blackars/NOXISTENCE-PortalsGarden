@@ -12,7 +12,7 @@
     }
     @font-face {
         font-family: 'Gobold';
-        src: url('/Gobold.otf') format('opentype');
+        src: url('/fonts/Gobold.otf') format('opentype');
         font-weight: normal;
         font-style: normal;
         font-display: swap;
@@ -151,7 +151,7 @@
         transition: all 0.4s ease;
     }
 
-    /* ============================
+    /* ===========================
        OVERLAY DE CÓDIGO DE ACCESO
        ============================ */
     #access-overlay {
@@ -336,6 +336,9 @@
     </div>
     <canvas id="escena"></canvas>
 
+    <!-- SCRIPT PRINCIPAL MANEJADO POR VITE -->
+    <script type="module" src="./nbases.js"></script>
+
     <!-- SCRIPT DE MANEJO DEL OVERLAY -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -344,6 +347,10 @@
             const errorMessage = document.getElementById('error-message');
             const correctCode = 'ATCG';
             
+            // Ocultar el contenido principal hasta que el código sea correcto
+            const mainContent = [document.querySelector('.title'), document.getElementById('lateral'), document.getElementById('escena')];
+            mainContent.forEach(el => el.style.visibility = 'hidden');
+
             // Enfocar automáticamente el input
             codeInput.focus();
             
@@ -352,25 +359,19 @@
                 const value = e.target.value.toUpperCase();
                 e.target.value = value;
                 
-                // Resetear estados visuales
                 codeInput.classList.remove('error', 'success');
                 errorMessage.classList.remove('show');
                 
-                // Verificar código cuando se completen 4 caracteres
                 if (value.length === 4) {
                     setTimeout(() => {
                         if (value === correctCode) {
-                            // Código correcto
                             codeInput.classList.add('success');
                             setTimeout(() => {
                                 overlay.classList.add('hidden');
-                                // Cargar el script principal después de ocultar el overlay
-                                setTimeout(() => {
-                                    loadMainScript();
-                                }, 300);
+                                // Mostrar contenido principal
+                                mainContent.forEach(el => el.style.visibility = 'visible');
                             }, 500);
                         } else {
-                            // Código incorrecto
                             codeInput.classList.add('error');
                             errorMessage.classList.add('show');
                             setTimeout(() => {
@@ -384,43 +385,12 @@
                 }
             });
             
-            // Manejar tecla Enter
             codeInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
-                    const value = e.target.value.toUpperCase();
-                    if (value.length < 4) {
-                        codeInput.classList.add('error');
-                        errorMessage.textContent = 'El código debe tener 4 caracteres.';
-                        errorMessage.classList.add('show');
-                        setTimeout(() => {
-                            codeInput.classList.remove('error');
-                            errorMessage.classList.remove('show');
-                            errorMessage.textContent = 'Código incorrecto. Inténtalo de nuevo.';
-                        }, 2000);
+                    if (e.target.value.length < 4) {
+                        // Disparar la validación si se presiona Enter antes de tiempo
+                         e.target.dispatchEvent(new Event('input'));
                     }
-                }
-            });
-            
-            // Función para cargar el script principal
-            function loadMainScript() {
-                // Cargar el archivo JS generado por Vite en dist
-                const script = document.createElement('script');
-                script.type = 'module';
-                script.src = './nbases.js'; 
-                script.onload = () => {
-                    console.log('✅ Experiencia de Bases Nitrogenadas cargada correctamente');
-                };
-                script.onerror = (error) => {
-                    console.error('❌ Error al cargar nbases.js:', error);
-                };
-                document.body.appendChild(script);
-            }
-            
-            // Prevenir recarga accidental
-            window.addEventListener('beforeunload', function(e) {
-                if (!overlay.classList.contains('hidden')) {
-                    e.preventDefault();
-                    e.returnValue = '';
                 }
             });
         });

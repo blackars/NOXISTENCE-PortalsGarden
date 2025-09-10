@@ -175,6 +175,10 @@
             }
         }
     </style>
+  <script type="module" crossorigin src="/assets/experiences/Users/spacewords-99ZU6D-x.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/js/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/js/vendor_three-DpMrvQiS.js">
+  <link rel="modulepreload" crossorigin href="/assets/js/bgmusic-D41st_RR.js">
 </head>
 <body>
     <div id="app">
@@ -182,37 +186,7 @@
 
     </div>
     <div class="title">Space Words</div>
-
-    <script type="module">
-        import { initSpaceWords } from './spacewords.js';
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            const app = document.getElementById('app');
-            
-            try {
-                // Inicializar SpaceWords
-                const spaceWords = initSpaceWords(app);
-                
-                // Cleanup al salir
-                window.addEventListener('beforeunload', () => {
-                    if (spaceWords && spaceWords.destroy) {
-                        spaceWords.destroy();
-                    }
-                });
-                
-            } catch (error) {
-                document.body.appendChild(errorDiv);
-            }
-        });
-    </script>
-    <div id="music"></div>
-    <script type="module">
-        import createBgMusic from "/bgmusic.js";
-        createBgMusic("music", {
-        position: "top-right",
-        color: "#ffffff",
-        src: "/sounds/ambient.mp3"
-        });
-    </script>
+
+    <div id="music"></div>
 </body>
 </html>

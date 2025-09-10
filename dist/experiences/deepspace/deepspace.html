@@ -49,34 +49,16 @@
         z-index: 10;
         }
     </style>
+  <script type="module" crossorigin src="/assets/experiences/Users/deepspace-B_dqFpWF.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/js/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/js/vendor_three-DpMrvQiS.js">
+  <link rel="modulepreload" crossorigin href="/assets/js/bgmusic-D41st_RR.js">
 </head>
 <body>
     <div id="simulator-container"></div>
     <div class="title">Deep Space Encounter</div>
-    <div id="timer">0</div>
-    <script type="module">
-        import { DeepSpaceSimulator } from './deepspace.js';
-
-        const simulator = new DeepSpaceSimulator('simulator-container');
-
-        // Actualización del contador visual de tiempo
-        const timerEl = document.getElementById('timer');
-        function updateTimer() {
-            timerEl.textContent = `Time: ${Math.floor(simulator.elapsedTime)}`;
-            requestAnimationFrame(updateTimer);
-        }
-        updateTimer();
-    </script>
+    <div id="timer">0</div>
         <div id="music"></div>
-
-        <script type="module">
-            import createBgMusic from "/bgmusic.js";
-        
-            createBgMusic("music", {
-            position: "top-right",
-            color: "#ffffff",
-            src: "/sounds/ambient.mp3"
-            });
-        </script>
+
 </body>
 </html>

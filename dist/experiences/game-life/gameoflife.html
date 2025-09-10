@@ -123,6 +123,10 @@
     input[type="range"]:hover::-webkit-slider-thumb { transform: scale(1.3); background: #000000; }
     input[type="range"]:hover::-moz-range-thumb { transform: scale(1.3); background: #000000; }
   </style>
+  <script type="module" crossorigin src="/assets/experiences/Users/gameoflife-DsDDNADv.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/js/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/js/vendor_three-DpMrvQiS.js">
+  <link rel="modulepreload" crossorigin href="/assets/js/bgmusic-D41st_RR.js">
 </head>
 <body>
   <div id="app"></div>
@@ -149,21 +153,8 @@
       <input id="speed" type="range" min="1" max="20" value="5">
     </div>
   </div>
-
-  <script type="module">
-    import { initGameofLife } from './gameoflife.js';
-    initGameofLife(document.getElementById('app'));
-  </script>
+
   <div id="music"></div>
-
-        <script type="module">
-            import createBgMusic from "/bgmusic.js";
-        
-            createBgMusic("music", {
-            position: "top-right",
-            color: "#ffffff",
-            src: "/sounds/ambient.mp3"
-            });
-        </script>
+
 </body>
 </html>

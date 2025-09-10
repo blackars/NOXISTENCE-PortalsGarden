@@ -73,29 +73,16 @@
         pointer-events: none;
         }
   </style>
+  <script type="module" crossorigin src="/assets/experiences/Users/thinker-hphN6VTy.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/js/modulepreload-polyfill-B5Qt9EMX.js">
+  <link rel="modulepreload" crossorigin href="/assets/js/vendor_three-DpMrvQiS.js">
+  <link rel="modulepreload" crossorigin href="/assets/js/bgmusic-D41st_RR.js">
 </head>
 <body>
   <div id="app"></div>
   <div class="title">Gardhan Thinker</div>
-  <!-- Cargar el componente como módulo local -->
-  <script type="module">
-    import initWordsRain from './thinker.js';
-    // iniciar la escena
-    initWordsRain({
-      container: document.getElementById('app'),
-      modelPath: '/assets/models/brain.glb'
-    });
-  </script>
+  <!-- Cargar el componente como módulo local -->
   <div id="music"></div>
-
-        <script type="module">
-            import createBgMusic from "/bgmusic.js";
-        
-            createBgMusic("music", {
-            position: "top-right",
-            color: "#ffffff",
-            src: "/sounds/ambient.mp3"
-            });
-        </script>
+
 </body>
 </html>

@@ -28,10 +28,18 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        // Add all experience entry points
+        lifeGame: resolve(__dirname, 'experiences/LifeGame.html'),
+        anothearth: resolve(__dirname, 'experiences/anothearth/anothearth.html'),
+        canon: resolve(__dirname, 'experiences/canon/canon.html'),
+        cleansquaredplace: resolve(__dirname, 'experiences/clean-squaredplace/cleansquaredplace.html'),
+        deepspace: resolve(__dirname, 'experiences/deepspace/deepspace.html'),
+        gameoflife: resolve(__dirname, 'experiences/game-life/gameoflife.html'),
+        humanthinker: resolve(__dirname, 'experiences/human-thinker/humanthinker.html'),
+        maxkodiaplanet: resolve(__dirname, 'experiences/maxkodiaplanet/maxkodiaplanet.html'),
         nbases: resolve(__dirname, 'experiences/n-bases/nbases.html'),
-        // Add other experiences here as needed
-        // 'experience-name': resolve(__dirname, 'experiences/experience-folder/entry-file.html'),
+        nbasesCombo1: resolve(__dirname, 'experiences/n-bases/combo1/combo1.html'),
+        spacewords: resolve(__dirname, 'experiences/space-words/spacewords.html'),
+        thinker: resolve(__dirname, 'experiences/thinker/thinker.html'),
       },
       output: {
         assetFileNames: (assetInfo) => {

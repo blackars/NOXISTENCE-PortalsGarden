@@ -7,7 +7,7 @@
     "dev": "vite",
     "update-paths": "node scripts/update-paths.js",
     "copy-assets": "node scripts/copy-experiences.js",
-    "build": "vite build && npm run copy-assets",
+    "build": "vite build",
     "preview": "vite preview",
     "deploy": "npm run build && netlify deploy --prod"
   },

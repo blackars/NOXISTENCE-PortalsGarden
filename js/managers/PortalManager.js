@@ -333,7 +333,7 @@ export class PortalManager {
             
             // Limpiar animaciones
             const mixer = (portalData.model && portalData.model.userData.mixer) || 
-                         (portal.userData && portal.userData.mixer);
+                        (portal.userData && portal.userData.mixer);
             
             if (mixer) {
                 const index = this.mixers.indexOf(mixer);

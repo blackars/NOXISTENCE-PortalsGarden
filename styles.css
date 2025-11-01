@@ -5,7 +5,6 @@ body, html {
   background: white;
   height: 100%;
   width: 100%;
-  font-family: 'Gobold', sans-serif;
   -webkit-tap-highlight-color: transparent;
   touch-action: none;
   position: fixed;
@@ -14,21 +13,6 @@ body, html {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
-@font-face {
-  font-family: 'Gobold';
-  src: url('/assets/public/Gobold.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'NumberOne';
-  src: url('public/numberone.woff2') format('woff2'),
-       url('public/numberone.woff') format('woff');
-  font-weight: 100;
-  font-style: normal;
-  font-display: swap;
 }
 #container {
   width: 100vw;

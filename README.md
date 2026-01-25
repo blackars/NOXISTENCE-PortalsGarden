@@ -23,6 +23,10 @@ The project is organized into the following main directories:
 *   `public/`: This directory contains all the static assets for the project, such as 3D models, textures, and fonts.
 *   `dist/`: This directory contains the production build of the project.
 
+## System Architecture Diagram
+
+![System Architecture Diagram](https://res.cloudinary.com/dgff8o52c/image/upload/Portals_Garden_Architecture_cn2hn2.jpg)
+
 ## Getting Started
 
 To get a local copy up and running, follow these simple steps.

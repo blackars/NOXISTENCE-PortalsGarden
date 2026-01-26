@@ -37,6 +37,10 @@ export default function initWordsRain(opts = {}) {
   const loader = new GLTFLoader();
   let brainRoot = new THREE.Object3D();
   scene.add(brainRoot);
+  
+  // Variable para almacenar el bounding box del modelo (collider)
+  let brainCollider = null;
+  const cameraRadius = 0.5; // Radio de la cámara para detección de colisiones
 
   function loadModel() {
     loader.load(modelPath, (gltf) => {
@@ -56,6 +60,11 @@ export default function initWordsRain(opts = {}) {
       model.position.set(0, 20, 0);
       brainRoot.add(model);
       brainRoot.userData.bounds = new THREE.Box3().setFromObject(model);
+      
+      // Calcular el collider del modelo (bounding box expandido ligeramente)
+      brainCollider = new THREE.Box3().setFromObject(model);
+      // Expandir ligeramente el collider para evitar que la cámara se pegue demasiado
+      brainCollider.expandByScalar(1.2);
     }, undefined, () => { createFallbackGeometry(); });
   }
 
@@ -65,6 +74,10 @@ export default function initWordsRain(opts = {}) {
     const sphere = new THREE.Mesh(geometry, material);
     sphere.position.set(0, 6, 0);
     brainRoot.add(sphere);
+    
+    // Crear collider para la geometría de fallback
+    brainCollider = new THREE.Box3().setFromObject(sphere);
+    brainCollider.expandByScalar(1.2);
   }
 
   loadModel();
@@ -381,10 +394,27 @@ export default function initWordsRain(opts = {}) {
   const minY = 1.6; // Altura mínima de la cámara
   const maxY = 50;   // Altura máxima de la cámara
 
+  // Función para verificar colisión entre la cámara y el modelo del cerebro
+  function checkBrainCollision(position) {
+    if (!brainCollider) return false;
+    
+    // Crear una esfera alrededor de la posición de la cámara para la detección
+    const cameraSphere = new THREE.Sphere(position, cameraRadius);
+    
+    // Verificar si la esfera de la cámara intersecta con el bounding box del cerebro
+    return brainCollider.intersectsSphere(cameraSphere);
+  }
+
+  // Función para obtener la posición previa de la cámara (para revertir colisiones)
+  const previousCameraPosition = new THREE.Vector3();
+
   const clock = new THREE.Clock();
   function animate(){
     const delta = Math.min(0.1, clock.getDelta());
     if(controls.isLocked) {
+      // Guardar la posición previa antes de mover
+      previousCameraPosition.copy(camera.position);
+      
       const moveSpeed = 15 * delta;
       const moveX = (keys['KeyD'] || keys['ArrowRight'] ? 1 : 0) - (keys['KeyA'] || keys['ArrowLeft'] ? 1 : 0);
       const moveZ = (keys['KeyW'] || keys['ArrowUp'] ? 1 : 0) - (keys['KeyS'] || keys['ArrowDown'] ? 1 : 0);
@@ -392,16 +422,37 @@ export default function initWordsRain(opts = {}) {
       // Mover hacia adelante/atrás
       if (moveZ !== 0) {
         controls.moveForward(moveZ * moveSpeed);
+        // Verificar colisión después del movimiento
+        if (checkBrainCollision(camera.position)) {
+          // Revertir el movimiento si hay colisión
+          camera.position.copy(previousCameraPosition);
+        } else {
+          // Actualizar la posición previa si no hay colisión
+          previousCameraPosition.copy(camera.position);
+        }
       }
       // Mover izquierda/derecha
       if (moveX !== 0) {
         controls.moveRight(moveX * moveSpeed);
+        // Verificar colisión después del movimiento
+        if (checkBrainCollision(camera.position)) {
+          // Revertir el movimiento si hay colisión
+          camera.position.copy(previousCameraPosition);
+        } else {
+          // Actualizar la posición previa si no hay colisión
+          previousCameraPosition.copy(camera.position);
+        }
       }
       
       // Aplicar límites del grid
       camera.position.x = THREE.MathUtils.clamp(camera.position.x, -gridSize, gridSize);
       camera.position.z = THREE.MathUtils.clamp(camera.position.z, -gridSize, gridSize);
       camera.position.y = THREE.MathUtils.clamp(camera.position.y, minY, maxY);
+      
+      // Verificar colisión final después de aplicar límites del grid
+      if (checkBrainCollision(camera.position)) {
+        camera.position.copy(previousCameraPosition);
+      }
     }
     emitFromBrain(delta); 
     updateSprites(delta);
